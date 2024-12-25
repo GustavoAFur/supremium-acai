@@ -34,6 +34,15 @@ const OrderDetails = () => {
 
   const [order, setOrder] = useState<Order>();
 
+  const Details = ({ title, content }: { title: string; content: string }) => {
+    return (
+      <div className="flex justify-between items-center">
+        <p className="font-semibold">{title}</p>
+        <p>{content}</p>
+      </div>
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,7 +57,11 @@ const OrderDetails = () => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setOrder({ ...docSnap.data(), id: docSnap.id } as Order);
+          setOrder({
+            ...docSnap.data(),
+            id: docSnap.id,
+            createdAt: docSnap.data().createdAt?.toDate(),
+          } as Order);
           console.log(docSnap.data());
         } else {
           router.push("/404");
@@ -108,22 +121,35 @@ const OrderDetails = () => {
               <CardTitle>Detalhes do pedido</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex justify-between items-center">
-                <p>Nome:</p>
-                <p>{order?.deliveryInfo.name}</p>
-              </div>
-              <div className="flex justify-between items-center">
-                <p>Endereço:</p>
-                <p>{order?.deliveryInfo.address}</p>
-              </div>
-              <div className="flex justify-between items-center">
-                <p>Complemento:</p>
-                <p>{order?.deliveryInfo.complement}</p>
+              <div className="space-y-4">
+                <Details
+                  title="Nome:"
+                  content={order?.deliveryInfo.name || ""}
+                />
+
+                <Details
+                  title="Telefone:"
+                  content={order?.deliveryInfo.phone || ""}
+                />
+                <Details
+                  title="Endereço:"
+                  content={order?.deliveryInfo.address || ""}
+                />
+                <Details
+                  title="Complemento:"
+                  content={order?.deliveryInfo.complement || ""}
+                />
+                <Details title="Status:" content={order?.status || ""} />
+                <Details
+                  title="Data do pedido:"
+                  content={order?.createdAt.toLocaleDateString("pt-BR") || ""}
+                />
+                <Details
+                  title="Total:"
+                  content={`R$ ${order?.totalPrice.toFixed(2)}`}
+                />
               </div>
             </CardContent>
-            <CardFooter>
-              <p>Card Footer</p>
-            </CardFooter>
           </Card>
         </div>
       </div>
