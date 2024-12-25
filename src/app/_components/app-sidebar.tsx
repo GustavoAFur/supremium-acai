@@ -106,7 +106,7 @@ export function AppSidebar() {
                       {/* Subitens do Menu */}
                       <SidebarMenuSubItem>
                         <a
-                          href="/orders/open"
+                          href="/orders?status=aberto"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Abertos
@@ -114,7 +114,15 @@ export function AppSidebar() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <a
-                          href="/products/create"
+                          href="/orders?status=em-andamento"
+                          className="block p-2 hover:bg-gray-200"
+                        >
+                          Em andamento
+                        </a>
+                      </SidebarMenuSubItem>
+                      <SidebarMenuSubItem>
+                        <a
+                          href="/orders?status=fechado"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Fechados
@@ -122,7 +130,7 @@ export function AppSidebar() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <a
-                          href="/products/create"
+                          href="/orders?status=cancelado"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Cancelados
@@ -138,8 +146,8 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem className="">
+        <SidebarMenu className="items-end">
+          <SidebarMenuItem>
             <UserButton showName />
           </SidebarMenuItem>
         </SidebarMenu>

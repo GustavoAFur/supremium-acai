@@ -21,6 +21,7 @@ import GridContent from "../../_components/grid-content";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useSearchParams } from "next/navigation";
 
 const Create = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -34,7 +35,6 @@ const Create = () => {
   const [und, setUnd] = useState("");
 
   const [isSaving, setIsSaving] = useState(false);
-
   const generateTokens = (text: string): string[] => {
     if (!text) return [];
     return text
