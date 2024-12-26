@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { ClipboardPenLine, DrumIcon, Drumstick, HomeIcon } from "lucide-react";
 
 import {
   Sidebar,
@@ -20,35 +20,6 @@ import {
 } from "@/components/ui/collapsible";
 import { UserButton } from "@clerk/nextjs";
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Cadastrar",
-    url: "/register",
-    icon: Inbox,
-  },
-  {
-    title: "Pedidos",
-    url: "/orders",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
-
 export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" side="left">
@@ -57,12 +28,21 @@ export function AppSidebar() {
           <SidebarGroupLabel>Cantinna</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/" className="block p-2 hover:bg-gray-200">
+                    <HomeIcon />
+                    Inicio
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
               <Collapsible>
                 {/* Menu Item Principal */}
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton>
-                      {/* Ícone ou texto para o botão */}
+                      <Drumstick />
                       <span>Produtos</span>
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -96,7 +76,7 @@ export function AppSidebar() {
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton>
-                      {/* Ícone ou texto para o botão */}
+                      <ClipboardPenLine />
                       <span>Pedidos</span>
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -148,7 +128,7 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu className="items-end">
           <SidebarMenuItem>
-            <UserButton showName />
+            <UserButton />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

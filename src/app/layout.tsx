@@ -28,11 +28,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  /*
   const { userId } = await auth();
 
   if (!userId) {
     return redirect("/sign-in");
-  }
+  }*/
 
   return (
     <ClerkProvider>

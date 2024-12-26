@@ -78,7 +78,7 @@ const OrderDetails = () => {
     <GridContent>
       <div className="space-y-4 w-[800px]">
         <h1 className="text-3xl font-semibold mt-8">Detalhes do pedido</h1>
-        <div className="flex justify-between items-center w-full">
+        <div className="flex justify-between items-center w-full font-semibold">
           <h3>ID do pedido: {params.id}</h3>
           <p className="capitalize">{order?.status}</p>
         </div>
