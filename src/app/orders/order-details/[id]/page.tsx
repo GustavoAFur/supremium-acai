@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/card";
 
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 const OrderDetails = () => {
   const params = useParams();
@@ -151,6 +152,8 @@ const OrderDetails = () => {
               </div>
             </CardContent>
           </Card>
+          <Button>Imprimir</Button>
+          <Button>Finalizar</Button>
         </div>
       </div>
     </GridContent>
