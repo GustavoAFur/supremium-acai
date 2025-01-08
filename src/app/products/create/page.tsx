@@ -112,7 +112,7 @@ const Create = () => {
         isAvailable,
         und,
         imageUrl,
-        tokens: nameTokens,
+        tokens: [...nameTokens, category.toLowerCase()],
         relevance: 1,
       }).then(() => {
         setIsSaving(false);

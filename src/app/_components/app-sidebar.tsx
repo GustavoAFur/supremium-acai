@@ -25,7 +25,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" side="left">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Cantinna</SidebarGroupLabel>
+          <SidebarGroupLabel>Supremium Açaí</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
@@ -84,6 +84,14 @@ export function AppSidebar() {
                   <CollapsibleContent className="pl-4">
                     <SidebarMenuSub>
                       {/* Subitens do Menu */}
+                      <SidebarMenuSubItem>
+                        <a
+                          href="/orders/create"
+                          className="block p-2 hover:bg-gray-200"
+                        >
+                          Criar
+                        </a>
+                      </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <a
                           href="/orders?status=aberto"

@@ -6,12 +6,11 @@ import { getStorage } from "firebase/storage";
 const apiKeyFb = process.env.API_KEY_FB;
 const firebaseConfig = {
   apiKey: apiKeyFb,
-  authDomain: "cantinna-app.firebaseapp.com",
-  projectId: "cantinna-app",
-  storageBucket: "cantinna-app.firebasestorage.app",
-  messagingSenderId: "328256068502",
-  appId: "1:328256068502:web:364fa2ec890a5407df1bb7",
-  measurementId: "G-MX44S1RPFL",
+  authDomain: "supremium-acai.firebaseapp.com",
+  projectId: "supremium-acai",
+  storageBucket: "supremium-acai.firebasestorage.app",
+  messagingSenderId: "237849422774",
+  appId: "1:237849422774:web:2708dd9c62d3146e2daf17"
 };
 
 // Initialize Firebase
