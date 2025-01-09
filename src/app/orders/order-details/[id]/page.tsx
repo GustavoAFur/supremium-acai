@@ -98,7 +98,9 @@ const OrderDetails = () => {
                 <TableRow key={item.id}>
                   <TableCell className="capitalize">{item.name}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
-                  <TableCell className="text-right">R${item.price}</TableCell>
+                  <TableCell className="text-right">
+                    R${item.total.toFixed(2)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

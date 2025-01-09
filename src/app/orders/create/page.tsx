@@ -62,7 +62,7 @@ const CreateOrder = () => {
   const [selectedProduct, setSelectedProduct] = useState<Products | null>(null);
 
   const [name, setName] = useState("");
-  const [adress, setAdress] = useState("");
+  const [address, setAddress] = useState("");
   const [complement, setComplement] = useState("");
   const [observation, setObservation] = useState("");
   const [phone, setPhone] = useState("");
@@ -108,7 +108,7 @@ const CreateOrder = () => {
         status: "aberto",
         createdAt: new Date(),
         items: orderProducts,
-        deliveryInfo: { name, adress, complement, observation, phone },
+        deliveryInfo: { name, address, complement, observation, phone },
         totalPrice,
       };
 
@@ -249,9 +249,9 @@ const CreateOrder = () => {
             />
             <Input
               placeholder="Endreço"
-              value={adress}
+              value={address}
               onChange={(e) => {
-                setAdress(e.target.value);
+                setAddress(e.target.value);
               }}
             />
             <Input
