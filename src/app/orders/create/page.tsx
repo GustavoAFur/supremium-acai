@@ -114,6 +114,7 @@ const CreateOrder = () => {
 
       await addDoc(orderRef, orderData).then(() => {
         setIsOpen(false);
+        setOrderProducts([]);
         alert("Pedido salvo com sucesso!!");
       });
     } catch (error) {}
