@@ -21,9 +21,9 @@ import { useSearchParams } from "next/navigation";
 export interface Product {
   id: string;
   name: string;
-  price: number;
+  price: string;
   quantity: number;
-  imageUrl: string;
+  total: number;
 }
 
 export interface DeliveryInfo {

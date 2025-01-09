@@ -1,4 +1,10 @@
-import { ClipboardPenLine, DrumIcon, Drumstick, HomeIcon } from "lucide-react";
+import {
+  ClipboardPenLine,
+  DrumIcon,
+  Drumstick,
+  HomeIcon,
+  IceCreamBowl,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -42,7 +48,7 @@ export function AppSidebar() {
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton>
-                      <Drumstick />
+                      <IceCreamBowl />
                       <span>Produtos</span>
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -100,14 +106,7 @@ export function AppSidebar() {
                           Abertos
                         </a>
                       </SidebarMenuSubItem>
-                      <SidebarMenuSubItem>
-                        <a
-                          href="/orders?status=em-andamento"
-                          className="block p-2 hover:bg-gray-200"
-                        >
-                          Em andamento
-                        </a>
-                      </SidebarMenuSubItem>
+
                       <SidebarMenuSubItem>
                         <a
                           href="/orders?status=fechado"

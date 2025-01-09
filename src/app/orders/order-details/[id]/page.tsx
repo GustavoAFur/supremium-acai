@@ -88,7 +88,6 @@ const OrderDetails = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Imagem</TableHead>
                 <TableHead>Nome</TableHead>
                 <TableHead>Quantidade</TableHead>
                 <TableHead className="text-right">Preço</TableHead>
@@ -97,16 +96,6 @@ const OrderDetails = () => {
             <TableBody>
               {order?.items.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className="font-medium">
-                    <div className="relative max-w-[50px] max-h-[50px] min-w-[50px] min-h-[50px] rounded-md overflow-hidden">
-                      <Image
-                        src={item.imageUrl || "/image-not-found.png"}
-                        alt={item.name}
-                        className="object-cover"
-                        fill
-                      />
-                    </div>
-                  </TableCell>
                   <TableCell className="capitalize">{item.name}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell className="text-right">R${item.price}</TableCell>
@@ -122,7 +111,7 @@ const OrderDetails = () => {
               <CardTitle>Detalhes do pedido</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <Details
                   title="Nome:"
                   content={order?.deliveryInfo.name || ""}
