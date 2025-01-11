@@ -1,7 +1,13 @@
 "use client";
 import GridContent from "@/app/_components/grid-content";
 import { db } from "@/utils/firebaseConfig";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import {
@@ -50,7 +56,11 @@ const Orders = () => {
 
   // Listener para atualizações em tempo real
   const fetchRealTimeData = () => {
-    const q = query(collection(db, "orders"), where("status", "==", status));
+    const q = query(
+      collection(db, "orders"),
+      where("status", "==", status),
+      orderBy("createdAt", "asc")
+    );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const ordersData: Order[] = snapshot.docs.map((doc) => ({
@@ -78,7 +88,7 @@ const Orders = () => {
     <GridContent>
       <h1 className="text-3xl font-semibold mt-8">Pedidos</h1>
 
-      <div className="mt-8 w-[800px]">
+      <div className="mt-8">
         <Table>
           <TableCaption>Lista de pedidos</TableCaption>
           <TableHeader>

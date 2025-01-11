@@ -66,8 +66,7 @@ const CreateOrder = () => {
   const [complement, setComplement] = useState("");
   const [observation, setObservation] = useState("");
   const [phone, setPhone] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [transshipment, setTransshipment] = useState("");
+  const [orderType, setOrderType] = useState("");
 
   const handleRemoveProduct = (index: number) => {
     setOrderProducts((prev) => prev.filter((_, i) => i !== index));
@@ -109,6 +108,7 @@ const CreateOrder = () => {
         createdAt: new Date(),
         items: orderProducts,
         deliveryInfo: { name, address, complement, observation, phone },
+        orderType,
         totalPrice,
       };
 
