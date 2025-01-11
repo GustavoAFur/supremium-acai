@@ -251,14 +251,16 @@ const OrderDetails = () => {
             Imprimir
             <Printer />
           </Button>
-          <Button
-            onClick={() => {
-              setIsOpen(true);
-            }}
-          >
-            Finalizar
-            <Check />
-          </Button>
+          {order?.status === "aberto" && (
+            <Button
+              onClick={() => {
+                setIsOpen(true);
+              }}
+            >
+              Finalizar
+              <Check />
+            </Button>
+          )}
         </div>
       </div>
 
