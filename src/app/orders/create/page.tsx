@@ -121,13 +121,18 @@ const CreateOrder = () => {
         totalPrice,
       };
 
-      await addDoc(orderRef, orderData).then(() => {
-        setIsCreating(false);
-        setIsOpen(false);
-        setOrderProducts([]);
-        alert("Pedido salvo com sucesso!!");
-      });
-    } catch (error) {}
+      await addDoc(orderRef, orderData)
+        .then(() => {
+          setIsCreating(false);
+          setIsOpen(false);
+          setOrderProducts([]);
+        })
+        .finally(() => {
+          alert("Pedido salvo com sucesso!!");
+        });
+    } catch (error) {
+      console.log("Erro ao salvar pedido!!", error);
+    }
   };
 
   const totalPrice = useMemo(() => {
@@ -188,11 +193,11 @@ const CreateOrder = () => {
               <div className="flex items-center justify-between">
                 <Label htmlFor="value">
                   Valor:{" "}
-                  {selectedProduct
-                    ? (
-                        parseFloat(selectedProduct.price) * parseFloat(qtd)
-                      ).toFixed(2)
-                    : "0.00"}
+                  {selectedProduct &&
+                    qtd &&
+                    (
+                      parseFloat(selectedProduct.price) * parseFloat(qtd)
+                    ).toFixed(2)}
                 </Label>
                 <Button onClick={handleAddProduct}>Adicionar</Button>
               </div>
