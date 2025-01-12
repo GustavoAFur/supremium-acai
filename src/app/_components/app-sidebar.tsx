@@ -1,10 +1,4 @@
-import {
-  ClipboardPenLine,
-  DrumIcon,
-  Drumstick,
-  HomeIcon,
-  IceCreamBowl,
-} from "lucide-react";
+import { ClipboardPenLine, HomeIcon, IceCreamBowl } from "lucide-react";
 
 import {
   Sidebar,
@@ -25,6 +19,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 export function AppSidebar() {
   return (
@@ -36,10 +31,10 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/" className="block p-2 hover:bg-gray-200">
+                  <Link href="/" className="block p-2 hover:bg-gray-200">
                     <HomeIcon />
                     Inicio
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
@@ -57,20 +52,20 @@ export function AppSidebar() {
                     <SidebarMenuSub>
                       {/* Subitens do Menu */}
                       <SidebarMenuSubItem>
-                        <a
+                        <Link
                           href="/products/create"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Cadastrar
-                        </a>
+                        </Link>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
-                        <a
+                        <Link
                           href="/products/edit"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Editar
-                        </a>
+                        </Link>
                       </SidebarMenuSubItem>
                     </SidebarMenuSub>
                   </CollapsibleContent>
@@ -91,37 +86,37 @@ export function AppSidebar() {
                     <SidebarMenuSub>
                       {/* Subitens do Menu */}
                       <SidebarMenuSubItem>
-                        <a
+                        <Link
                           href="/orders/create"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Criar
-                        </a>
+                        </Link>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
-                        <a
+                        <Link
                           href="/orders?status=aberto"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Abertos
-                        </a>
+                        </Link>
                       </SidebarMenuSubItem>
 
                       <SidebarMenuSubItem>
-                        <a
+                        <Link
                           href="/orders?status=fechado"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Fechados
-                        </a>
+                        </Link>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
-                        <a
+                        <Link
                           href="/orders?status=cancelado"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Cancelados
-                        </a>
+                        </Link>
                       </SidebarMenuSubItem>
                     </SidebarMenuSub>
                   </CollapsibleContent>

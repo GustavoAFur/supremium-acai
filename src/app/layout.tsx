@@ -1,12 +1,10 @@
-import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/app-sidebar";
 
-import { ClerkProvider, UserButton } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
