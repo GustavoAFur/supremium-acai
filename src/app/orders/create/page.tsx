@@ -53,6 +53,7 @@ interface Products {
 
 const CreateOrder = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const [qtd, setQtd] = useState("");
   const [products, setProducts] = useState<Products[]>([]);
@@ -109,6 +110,7 @@ const CreateOrder = () => {
 
   const handleCreateOrder = async () => {
     try {
+      setIsCreating(true);
       const orderRef = collection(db, "orders");
       const orderData = {
         status: "aberto",
@@ -120,6 +122,7 @@ const CreateOrder = () => {
       };
 
       await addDoc(orderRef, orderData).then(() => {
+        setIsCreating(false);
         setIsOpen(false);
         setOrderProducts([]);
         alert("Pedido salvo com sucesso!!");
@@ -299,7 +302,9 @@ const CreateOrder = () => {
               </>
             )}
 
-            <Button onClick={handleCreateOrder}>Finalizar</Button>
+            <Button disabled={isCreating} onClick={handleCreateOrder}>
+              {isCreating ? "Finalizando" : "Finalizar"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
