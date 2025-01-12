@@ -23,10 +23,8 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
 import { Input } from "@/components/ui/input";
@@ -68,6 +66,11 @@ const CreateOrder = () => {
   const [phone, setPhone] = useState("");
   const [orderType, setOrderType] = useState("");
 
+  const orderTypes = [
+    { value: "mesa", label: "Mesa" },
+    { value: "delivery", label: "Delivery" },
+  ];
+
   const handleRemoveProduct = (index: number) => {
     setOrderProducts((prev) => prev.filter((_, i) => i !== index));
   };
@@ -77,6 +80,10 @@ const CreateOrder = () => {
     if (product) {
       setSelectedProduct(product);
     }
+  };
+
+  const handleSelectType = (value: string) => {
+    setOrderType(value);
   };
 
   const handleAddProduct = () => {
@@ -247,34 +254,51 @@ const CreateOrder = () => {
                 setName(e.target.value);
               }}
             />
-            <Input
-              placeholder="Endreço"
-              value={address}
-              onChange={(e) => {
-                setAddress(e.target.value);
-              }}
-            />
-            <Input
-              placeholder="Complemento"
-              value={complement}
-              onChange={(e) => {
-                setComplement(e.target.value);
-              }}
-            />
-            <Input
-              placeholder="Observaçãp"
-              value={observation}
-              onChange={(e) => {
-                setObservation(e.target.value);
-              }}
-            />
-            <Input
-              placeholder="Telefone"
-              value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-              }}
-            />
+            <Select onValueChange={handleSelectType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Tipo de pedido" />
+              </SelectTrigger>
+              <SelectContent>
+                {orderTypes.map((item, index) => (
+                  <SelectItem key={index} value={item.value}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {orderType === "delivery" && (
+              <>
+                <Input
+                  placeholder="Endreço"
+                  value={address}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                  }}
+                />
+                <Input
+                  placeholder="Complemento"
+                  value={complement}
+                  onChange={(e) => {
+                    setComplement(e.target.value);
+                  }}
+                />
+                <Input
+                  placeholder="Observaçãp"
+                  value={observation}
+                  onChange={(e) => {
+                    setObservation(e.target.value);
+                  }}
+                />
+                <Input
+                  placeholder="Telefone"
+                  value={phone}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                  }}
+                />
+              </>
+            )}
+
             <Button onClick={handleCreateOrder}>Finalizar</Button>
           </div>
         </DialogContent>
