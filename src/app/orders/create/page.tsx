@@ -116,9 +116,10 @@ const CreateOrder = () => {
         status: "aberto",
         createdAt: new Date(),
         items: orderProducts,
-        deliveryInfo: { name, address, complement, observation, phone },
+        deliveryInfo: { address, complement, observation, phone },
         orderType,
         totalPrice,
+        name,
       };
 
       await addDoc(orderRef, orderData)

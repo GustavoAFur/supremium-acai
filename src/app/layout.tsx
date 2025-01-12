@@ -44,8 +44,8 @@ export default async function RootLayout({
           <SidebarProvider>
             <AppSidebar />
 
-            <main className="flex-1 px-4 overflow-auto">
-              <div className="fixed w-full h-auto flex items-center bg-white">
+            <main className="flex-1 px-4 overflow-auto bg-gray-100">
+              <div className="fixed w-full h-auto flex items-center bg-gray-100">
                 <SidebarTrigger />
               </div>
 

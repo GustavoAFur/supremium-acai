@@ -80,7 +80,7 @@ const Create = () => {
           </CardContent>
         </Card>
       </div>
-      <Button disabled={isSaving} onClick={saveProduct} className="mt-4">
+      <Button disabled={isSaving} onClick={saveProduct} className="mt-4 w-20">
         {isSaving ? "Salvando..." : "Salvar"}
       </Button>
     </GridContent>

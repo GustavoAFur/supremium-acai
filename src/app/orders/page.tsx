@@ -19,11 +19,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, RefreshCcw } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
+interface Payment {
+  methodPayment: string;
+  value: string;
+}
+
+interface PaymentInfo {
+  paymentMethod: Payment[];
+  transshipment: number;
+  totalPayed: number;
+}
 export interface Product {
   id: string;
   name: string;
@@ -35,7 +44,6 @@ export interface Product {
 export interface DeliveryInfo {
   address: string;
   complement: string;
-  name: string;
   observation: string;
   phone: string;
 }
@@ -47,6 +55,9 @@ export interface Order {
   deliveryInfo: DeliveryInfo;
   items: Product[];
   totalPrice: number;
+  orderType: string;
+  name: string;
+  paymentInfo: PaymentInfo;
 }
 
 const Orders = () => {
@@ -70,6 +81,9 @@ const Orders = () => {
         deliveryInfo: doc.data().deliveryInfo,
         items: doc.data().items,
         totalPrice: doc.data().totalPrice,
+        orderType: doc.data().orderType,
+        name: doc.data().name,
+        paymentInfo: doc.data().paymentInfo,
       }));
       setOrders(ordersData);
     });
@@ -89,7 +103,7 @@ const Orders = () => {
       <h1 className="text-3xl font-semibold mt-8">Pedidos</h1>
 
       <div className="mt-8">
-        <Table>
+        <Table className="bg-white">
           <TableCaption>Lista de pedidos</TableCaption>
           <TableHeader>
             <TableRow>
@@ -107,7 +121,7 @@ const Orders = () => {
                   {order.createdAt.toLocaleDateString()}
                 </TableCell>
                 <TableCell>{order.status}</TableCell>
-                <TableCell>{order.deliveryInfo.name}</TableCell>
+                <TableCell>{order.name}</TableCell>
                 <TableCell className="text-right">
                   R${order.totalPrice.toFixed(2)}
                 </TableCell>
