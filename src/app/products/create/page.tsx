@@ -40,7 +40,7 @@ const Create = () => {
       setUnd("");
     } catch (error) {
       setIsSaving(false);
-      alert("Erro ao salvar o produto");
+      alert(error);
     }
   };
 

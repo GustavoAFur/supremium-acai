@@ -109,7 +109,7 @@ const OrderDetails = () => {
     };
 
     fetchData();
-  }, [params]);
+  }, [params, router]);
 
   const finishOrder = async () => {
     try {

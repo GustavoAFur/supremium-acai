@@ -96,7 +96,7 @@ const Orders = () => {
 
     // Limpeza: parar o listener quando o componente desmontar
     return () => unsubscribe();
-  }, []);
+  }, [fetchRealTimeData]);
 
   return (
     <GridContent>
