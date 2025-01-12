@@ -39,6 +39,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Printer } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 interface Methods {
   methodPayment: string;
@@ -52,8 +53,6 @@ const OrderDetails = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [order, setOrder] = useState<Order>();
-
-  const [totalPriceOrder, setTotalPriceOrder] = useState(0);
 
   const [paymentMethodList, setPaymentMethodList] = useState<Methods[]>([]);
   const [value, setValue] = useState("");
@@ -79,7 +78,7 @@ const OrderDetails = () => {
     return (
       <div className="flex justify-between items-center">
         <p className="font-semibold">{title}</p>
-        <p>{content}</p>
+        <p className="capitalize">{content}</p>
       </div>
     );
   };
@@ -103,7 +102,6 @@ const OrderDetails = () => {
             id: docSnap.id,
             createdAt: docSnap.data().createdAt?.toDate(),
           } as Order);
-          setTotalPriceOrder(docSnap.data().totalPrice);
         } else {
           router.push("/404");
         }
@@ -191,7 +189,7 @@ const OrderDetails = () => {
       </div>
 
       <div className="flex justify-between items-center w-full">
-        <Table>
+        <Table className="bg-white">
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
@@ -220,29 +218,50 @@ const OrderDetails = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <Details title="Nome:" content={order?.deliveryInfo.name || ""} />
+              <Details title="Nome:" content={order?.name || ""} />
+              {order?.orderType === "delivery" && (
+                <>
+                  <Details
+                    title="Telefone:"
+                    content={order?.deliveryInfo.phone || ""}
+                  />
+                  <Details
+                    title="Endereço:"
+                    content={order?.deliveryInfo.address || ""}
+                  />
+                  <Details
+                    title="Complemento:"
+                    content={order?.deliveryInfo.complement || ""}
+                  />
+                </>
+              )}
 
-              <Details
-                title="Telefone:"
-                content={order?.deliveryInfo.phone || ""}
-              />
-              <Details
-                title="Endereço:"
-                content={order?.deliveryInfo.address || ""}
-              />
-              <Details
-                title="Complemento:"
-                content={order?.deliveryInfo.complement || ""}
-              />
               <Details title="Status:" content={order?.status || ""} />
               <Details
                 title="Data do pedido:"
                 content={order?.createdAt.toLocaleDateString("pt-BR") || ""}
               />
+              <Separator />
               <Details
                 title="Total:"
                 content={`R$ ${order?.totalPrice.toFixed(2)}`}
               />
+              {order?.status === "fechado" && (
+                <div className="w-full flex justify-between">
+                  <p className="font-semibold">Formas de pagamento:</p>
+                  <div className="w-[200px]">
+                    {order?.paymentInfo.paymentMethod.map((item, index) => (
+                      <div
+                        className="w-full flex items-center justify-between"
+                        key={index}
+                      >
+                        <p className="capitalize">{item.methodPayment}:</p>
+                        <p>R$ {parseFloat(item.value).toFixed(2)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
