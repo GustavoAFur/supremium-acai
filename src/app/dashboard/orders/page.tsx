@@ -8,7 +8,7 @@ import {
   onSnapshot,
   orderBy,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   Table,
@@ -66,7 +66,7 @@ const Orders = () => {
   const status = search.get("status");
 
   // Listener para atualizações em tempo real
-  const fetchRealTimeData = () => {
+  const fetchRealTimeData = useCallback(() => {
     const q = query(
       collection(db, "orders"),
       where("status", "==", status),
@@ -88,8 +88,8 @@ const Orders = () => {
       setOrders(ordersData);
     });
 
-    return unsubscribe; // Para parar de escutar quando o componente desmontar
-  };
+    return unsubscribe;
+  }, [status]);
 
   useEffect(() => {
     const unsubscribe = fetchRealTimeData();

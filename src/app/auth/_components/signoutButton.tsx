@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/utils/firebaseConfig";
-import { deleteCookie, getCookie } from "cookies-next";
+import { deleteCookie } from "cookies-next";
 import { Button } from "@/components/ui/button"; // Importe o botão
 
 export default function SignOutButton() {

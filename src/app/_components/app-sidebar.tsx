@@ -18,7 +18,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import SignOutButton from "../auth/_components/signoutButton";
 
