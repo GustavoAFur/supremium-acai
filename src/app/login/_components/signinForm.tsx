@@ -20,6 +20,8 @@ import { useRouter } from "next/navigation";
 export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   // Após login bem-sucedido, salve o token no cookie
@@ -30,30 +32,22 @@ export function SignIn() {
     });
   };
 
-  const hendleSignIn = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-
-        // Obtenha o token JWT após o login
-        const token = await user.getIdToken();
-
-        // Salve o token no cookie
-        await saveTokenToCookies(token);
-
-        // Redirecione para o dashboard
-        router.push("/dashboard");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        if (errorCode === "auth/wrong-password") {
-          alert("Senha incorreta");
-        } else if (errorCode === "auth/user-not-found") {
-          alert("Usuário não encontrado");
-        } else {
-          alert(error.message);
-        }
-      });
+  const handleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const token = await userCredential.user.getIdToken();
+      await saveTokenToCookies(token);
+      router.push("/dashboard");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -91,8 +85,9 @@ export function SignIn() {
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancelar</Button>
-          <Button onClick={hendleSignIn}>Entrar</Button>
+          <Button onClick={handleSignIn} disabled={isLoading}>
+            {isLoading ? "Carregando..." : "Entrar"}
+          </Button>
         </CardFooter>
       </Card>
     </div>
