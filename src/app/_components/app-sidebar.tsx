@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/collapsible";
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import SignOutButton from "../auth/_components/signoutButton";
 
 export function AppSidebar() {
   return (
@@ -53,7 +54,7 @@ export function AppSidebar() {
                       {/* Subitens do Menu */}
                       <SidebarMenuSubItem>
                         <Link
-                          href="/products/create"
+                          href="/dashboard/products/create"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Cadastrar
@@ -61,7 +62,7 @@ export function AppSidebar() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <Link
-                          href="/products/edit"
+                          href="/dashboard/products/edit"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Editar
@@ -87,7 +88,7 @@ export function AppSidebar() {
                       {/* Subitens do Menu */}
                       <SidebarMenuSubItem>
                         <Link
-                          href="/orders/create"
+                          href="/dashboard/orders/create"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Criar
@@ -95,7 +96,7 @@ export function AppSidebar() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <Link
-                          href="/orders?status=aberto"
+                          href="/dashboard/orders?status=aberto"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Abertos
@@ -104,7 +105,7 @@ export function AppSidebar() {
 
                       <SidebarMenuSubItem>
                         <Link
-                          href="/orders?status=fechado"
+                          href="/dashboard/orders?status=fechado"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Fechados
@@ -112,7 +113,7 @@ export function AppSidebar() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <Link
-                          href="/orders?status=cancelado"
+                          href="/dashboard/orders?status=cancelado"
                           className="block p-2 hover:bg-gray-200"
                         >
                           Cancelados
@@ -130,7 +131,7 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu className="items-end">
           <SidebarMenuItem>
-            <UserButton />
+            <SignOutButton />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

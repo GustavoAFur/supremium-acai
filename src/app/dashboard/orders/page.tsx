@@ -126,7 +126,7 @@ const Orders = () => {
                   R${order.totalPrice.toFixed(2)}
                 </TableCell>
                 <TableCell>
-                  <Link href={`/orders/order-details/${order.id}`}>
+                  <Link href={`/dashboard/orders/order-details/${order.id}`}>
                     <ArrowRight />
                   </Link>
                 </TableCell>
