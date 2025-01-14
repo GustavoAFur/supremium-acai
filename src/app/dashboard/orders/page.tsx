@@ -8,7 +8,7 @@ import {
   onSnapshot,
   orderBy,
 } from "firebase/firestore";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 
 import {
   Table,
@@ -99,43 +99,45 @@ const Orders = () => {
   }, [fetchRealTimeData]);
 
   return (
-    <GridContent>
-      <h1 className="text-3xl font-semibold mt-8">Pedidos</h1>
+    <Suspense fallback={<div>Loading...</div>}>
+      <GridContent>
+        <h1 className="text-3xl font-semibold mt-8">Pedidos</h1>
 
-      <div className="mt-8">
-        <Table className="bg-white">
-          <TableCaption>Lista de pedidos</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Data</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Cliente</TableHead>
-              <TableHead className="text-right">Total</TableHead>
-              <TableHead>Ação</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="font-medium">
-                  {order.createdAt.toLocaleDateString()}
-                </TableCell>
-                <TableCell>{order.status}</TableCell>
-                <TableCell>{order.name}</TableCell>
-                <TableCell className="text-right">
-                  R${order.totalPrice.toFixed(2)}
-                </TableCell>
-                <TableCell>
-                  <Link href={`/dashboard/orders/order-details/${order.id}`}>
-                    <ArrowRight />
-                  </Link>
-                </TableCell>
+        <div className="mt-8">
+          <Table className="bg-white">
+            <TableCaption>Lista de pedidos</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Data</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Cliente</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+                <TableHead>Ação</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </GridContent>
+            </TableHeader>
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell className="font-medium">
+                    {order.createdAt.toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>{order.status}</TableCell>
+                  <TableCell>{order.name}</TableCell>
+                  <TableCell className="text-right">
+                    R${order.totalPrice.toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/dashboard/orders/order-details/${order.id}`}>
+                      <ArrowRight />
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </GridContent>
+    </Suspense>
   );
 };
 
