@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
-const apiKeyFb = process.env.NEXT_PUBLIC_API_KEY_FB;
+const apiKeyFb = process.env.API_KEY_FB;
 const firebaseConfig = {
   apiKey: apiKeyFb,
   authDomain: "supremium-acai.firebaseapp.com",
