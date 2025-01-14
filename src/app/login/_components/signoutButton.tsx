@@ -17,7 +17,7 @@ export default function SignOutButton() {
     deleteCookie("access_token");
 
     // Redireciona para a página de login
-    router.push("/auth");
+    router.push("/login");
   };
 
   return <Button onClick={handleSignOut}>Sair</Button>;
