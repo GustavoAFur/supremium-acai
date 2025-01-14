@@ -5,10 +5,10 @@ export async function middleware(request: NextRequest) {
   const { pathname, origin } = request.nextUrl;
 
   if (!token && (pathname.startsWith("/dashboard") || pathname === "/")) {
-    return NextResponse.redirect(new URL("/auth", origin));
+    return NextResponse.redirect(new URL("/login", origin));
   }
 
-  if (token && (pathname.startsWith("/auth") || pathname === "/")) {
+  if (token && (pathname.startsWith("/login") || pathname === "/")) {
     return NextResponse.redirect(new URL("/dashboard", origin));
   }
 }

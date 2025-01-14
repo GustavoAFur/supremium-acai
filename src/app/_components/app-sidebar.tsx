@@ -19,7 +19,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import Link from "next/link";
-import SignOutButton from "../auth/_components/signoutButton";
+import SignOutButton from "../login/_components/signoutButton";
 
 export function AppSidebar() {
   return (
