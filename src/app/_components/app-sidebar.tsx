@@ -1,3 +1,4 @@
+"use client";
 import { ClipboardPenLine, HomeIcon, IceCreamBowl } from "lucide-react";
 
 import {
