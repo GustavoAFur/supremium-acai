@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { auth } from "@/utils/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { setCookie } from "cookies-next";
+import { setCookie } from "cookies-next/client";
 import { useRouter } from "next/navigation";
 
 export function SignIn() {
@@ -44,6 +44,7 @@ export function SignIn() {
       await saveTokenToCookies(token);
       router.push("/dashboard");
     } catch (error) {
+      alert("erro ao fazer login");
       console.log(error);
     } finally {
       setIsLoading(false);

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/utils/firebaseConfig";
-import { deleteCookie } from "cookies-next";
+import { deleteCookie } from "cookies-next/client";
 import { Button } from "@/components/ui/button"; // Importe o botão
 import { useState } from "react";
 
@@ -15,13 +15,8 @@ export default function SignOutButton() {
   const handleSignOut = async () => {
     setIsLoading(true);
     try {
-      // Desconecta o usuário do Firebase
       await signOut(auth);
-
-      // Remove o token do cookie
       deleteCookie("access_token");
-
-      // Redireciona para a página de login
       router.push("/login");
     } catch (error) {
       console.log(error);
