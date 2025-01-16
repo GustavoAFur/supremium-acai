@@ -6,6 +6,7 @@ import { auth } from "@/utils/firebaseConfig";
 import { deleteCookie } from "cookies-next/client";
 import { Button } from "@/components/ui/button"; // Importe o botão
 import { useState } from "react";
+import { LogOutIcon } from "lucide-react";
 
 export default function SignOutButton() {
   const router = useRouter(); // hook que só funciona em Client Component
@@ -15,6 +16,12 @@ export default function SignOutButton() {
   const handleSignOut = async () => {
     setIsLoading(true);
     try {
+      const userConfirmed = window.confirm("Tem certeza de que deseja sair?");
+
+      if (!userConfirmed) {
+        return;
+      }
+
       await signOut(auth);
       deleteCookie("access_token");
       router.push("/login");
@@ -26,8 +33,9 @@ export default function SignOutButton() {
   };
 
   return (
-    <Button disabled={isLoading} onClick={handleSignOut}>
+    <Button variant={"ghost"} disabled={isLoading} onClick={handleSignOut}>
       {isLoading ? "Saindo" : "Sair"}
+      <LogOutIcon />
     </Button>
   );
 }

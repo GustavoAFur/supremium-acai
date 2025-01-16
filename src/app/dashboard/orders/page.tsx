@@ -100,7 +100,7 @@ const OrdersContent = () => {
 
   return (
     <GridContent>
-      <h1 className="text-3xl font-semibold mt-8">Pedidos</h1>
+      <h1 className="text-3xl font-semibold">Pedidos</h1>
 
       <div className="mt-8">
         <Table className="bg-white">
@@ -108,9 +108,10 @@ const OrdersContent = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Data</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Cliente</TableHead>
-              <TableHead className="text-right">Total</TableHead>
+              <TableHead className="w-[100px]">Status</TableHead>
+              <TableHead className="w-[100px]">Tipo</TableHead>
+              <TableHead className="w-[300px]">Cliente</TableHead>
+              <TableHead>Total</TableHead>
               <TableHead>Ação</TableHead>
             </TableRow>
           </TableHeader>
@@ -120,12 +121,11 @@ const OrdersContent = () => {
                 <TableCell className="font-medium">
                   {order.createdAt.toLocaleDateString()}
                 </TableCell>
-                <TableCell>{order.status}</TableCell>
-                <TableCell>{order.name}</TableCell>
-                <TableCell className="text-right">
-                  R${order.totalPrice.toFixed(2)}
-                </TableCell>
-                <TableCell>
+                <TableCell className="capitalize">{order.status}</TableCell>
+                <TableCell className="capitalize">{order.orderType}</TableCell>
+                <TableCell className="capitalize">{order.name}</TableCell>
+                <TableCell>R$ {order.totalPrice.toFixed(2)}</TableCell>
+                <TableCell className="text-end">
                   <Link href={`/dashboard/orders/order-details/${order.id}`}>
                     <ArrowRight />
                   </Link>

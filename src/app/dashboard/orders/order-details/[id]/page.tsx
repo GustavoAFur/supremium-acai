@@ -35,9 +35,10 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
-import { Check, Printer } from "lucide-react";
+import { BanIcon, Check, Printer } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
 
 interface Methods {
   methodPayment: string;
@@ -130,8 +131,38 @@ const OrderDetails = () => {
         },
       }).then(() => {
         setIsOpen(false);
-        router.push("/orders?status=aberto");
+        router.push("/dashboard/orders?status=aberto");
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCancel = async () => {
+    try {
+      // Exibe uma mensagem de confirmação
+      const userConfirmed = window.confirm(
+        "Tem certeza de que deseja cancelar este pedido?"
+      );
+
+      if (!userConfirmed) {
+        return; // Se o usuário cancelar, interrompe a execução
+      }
+
+      const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+
+      if (!id) {
+        router.push("/404"); // Redireciona se o ID não for válido
+        return;
+      }
+
+      const docRef = doc(db, "orders", id);
+      await updateDoc(docRef, {
+        status: "cancelado",
+      });
+
+      // Redireciona após atualizar o documento
+      router.push("/dashboard/orders?status=aberto");
     } catch (error) {
       console.log(error);
     }
@@ -268,15 +299,22 @@ const OrderDetails = () => {
             Imprimir
             <Printer />
           </Button>
+
           {order?.status === "aberto" && (
-            <Button
-              onClick={() => {
-                setIsOpen(true);
-              }}
-            >
-              Finalizar
-              <Check />
-            </Button>
+            <div className="flex items-center justify-end gap-4">
+              <Button variant={"destructive"} onClick={handleCancel}>
+                Cancelar
+                <BanIcon />
+              </Button>
+              <Button
+                onClick={() => {
+                  setIsOpen(true);
+                }}
+              >
+                Finalizar
+                <Check />
+              </Button>
+            </div>
           )}
         </div>
       </div>
@@ -338,6 +376,12 @@ const OrderDetails = () => {
               </TableFooter>
             </Table>
           </div>
+          <Label>
+            A pagar:{" "}
+            {(order?.totalPrice || 0) - totalPayed > 0
+              ? `${(order?.totalPrice || 0) - totalPayed}`
+              : "0.00"}
+          </Label>
 
           <Button onClick={finishOrder}>Finalizar</Button>
         </DialogContent>

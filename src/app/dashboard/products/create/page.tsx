@@ -46,7 +46,7 @@ const Create = () => {
 
   return (
     <GridContent>
-      <h1 className="text-3xl font-semibold mt-8">Cadastrar produto</h1>
+      <h1 className="text-3xl font-semibold">Cadastrar produto</h1>
 
       <div className="flex gap-4">
         <Card className="mt-4">

@@ -157,7 +157,7 @@ const CreateOrder = () => {
 
   return (
     <GridContent>
-      <h1>Criar Pedido</h1>
+      <h1 className="text-3xl font-semibold">Criar Pedido</h1>
       <div className="flex flex-auto w-full gap-4">
         <Card className="mt-4 min-w-[400px] max-h-[260px]">
           <CardHeader>
@@ -167,29 +167,36 @@ const CreateOrder = () => {
           <CardContent className="pt-4">
             <div className="space-y-4">
               <div className="flex gap-4">
-                <Input
-                  value={qtd}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (/^\d*\.?\d*$/.test(value)) setQtd(value);
-                  }}
-                  placeholder="Quantidade"
-                  className="w-24"
-                />
-                <Select onValueChange={handleSelectChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Produto" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {products.map((item) => (
-                      <SelectItem key={item.id} value={item.id}>
-                        {`${item.name} (R$  ${parseFloat(item.price).toFixed(
-                          2
-                        )} - ${item.und})`}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="space-y-2">
+                  <Label>Quantidade</Label>
+                  <Input
+                    value={qtd}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d*\.?\d*$/.test(value)) setQtd(value);
+                    }}
+                    placeholder="Ex: 0.400"
+                    className="w-24"
+                  />
+                </div>
+
+                <div className="space-y-2 w-full">
+                  <Label>Produto</Label>
+                  <Select onValueChange={handleSelectChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Escolha um produto" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {products.map((item) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {`${item.name} (R$  ${parseFloat(item.price).toFixed(
+                            2
+                          )} - ${item.und})`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div className="flex items-center justify-between">
                 <Label htmlFor="value">
@@ -238,6 +245,7 @@ const CreateOrder = () => {
               <TableCell colSpan={3}>Total: {totalPrice.toFixed(2)}</TableCell>
               <TableCell className="text-right">
                 <Button
+                  disabled={orderProducts.length == 0}
                   onClick={() => {
                     setIsOpen(true);
                   }}
@@ -308,7 +316,10 @@ const CreateOrder = () => {
               </>
             )}
 
-            <Button disabled={isCreating} onClick={handleCreateOrder}>
+            <Button
+              disabled={isCreating || name === "" || orderType === ""}
+              onClick={handleCreateOrder}
+            >
               {isCreating ? "Finalizando" : "Finalizar"}
             </Button>
           </div>
