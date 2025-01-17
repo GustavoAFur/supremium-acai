@@ -158,8 +158,8 @@ const CreateOrder = () => {
   return (
     <GridContent>
       <h1 className="text-3xl font-semibold">Criar Pedido</h1>
-      <div className="flex flex-auto w-full gap-4">
-        <Card className="mt-4 min-w-[400px] max-h-[260px]">
+      <div className="flex gap-4">
+        <Card className="min-w-[400px] max-h-[260px]">
           <CardHeader>
             <CardTitle>Produto</CardTitle>
           </CardHeader>
