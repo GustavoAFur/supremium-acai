@@ -44,7 +44,7 @@ interface OrderProducts {
   total: number;
 }
 
-interface Products {
+export interface Products {
   id: string;
   name: string;
   price: string;
@@ -213,7 +213,7 @@ const CreateOrder = () => {
           </CardContent>
         </Card>
 
-        <Table className="min-w-[580px]">
+        <Table className="bg-white">
           <TableCaption>Lista de produtos</TableCaption>
           <TableHeader>
             <TableRow>

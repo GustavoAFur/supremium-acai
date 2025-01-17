@@ -121,7 +121,17 @@ const OrdersContent = () => {
                 <TableCell className="font-medium">
                   {order.createdAt.toLocaleDateString()}
                 </TableCell>
-                <TableCell className="capitalize">{order.status}</TableCell>
+                <TableCell
+                  className={`capitalize ${
+                    order.status === "aberto"
+                      ? "text-green-500"
+                      : order.status === "fechado"
+                      ? "text-red-500"
+                      : "text-black"
+                  }`}
+                >
+                  {order.status}
+                </TableCell>
                 <TableCell className="capitalize">{order.orderType}</TableCell>
                 <TableCell className="capitalize">{order.name}</TableCell>
                 <TableCell>R$ {order.totalPrice.toFixed(2)}</TableCell>

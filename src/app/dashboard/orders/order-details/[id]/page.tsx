@@ -73,6 +73,15 @@ const OrderDetails = () => {
     },
   ];
 
+  const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+
+  if (!id) {
+    router.push("/404"); // Redireciona se o ID não for válido
+    return;
+  }
+
+  const docRef = doc(db, "orders", id);
+
   const Details = ({ title, content }: { title: string; content: string }) => {
     return (
       <div className="flex justify-between items-center">
@@ -85,14 +94,6 @@ const OrderDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
-
-        if (!id) {
-          router.push("/404"); // Redireciona se o ID não for válido
-          return;
-        }
-
-        const docRef = doc(db, "orders", id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -114,14 +115,6 @@ const OrderDetails = () => {
 
   const finishOrder = async () => {
     try {
-      const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
-
-      if (!id) {
-        router.push("/404"); // Redireciona se o ID não for válido
-        return;
-      }
-
-      const docRef = doc(db, "orders", id);
       await updateDoc(docRef, {
         status: "fechado",
         paymentInfo: {
@@ -149,14 +142,6 @@ const OrderDetails = () => {
         return; // Se o usuário cancelar, interrompe a execução
       }
 
-      const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
-
-      if (!id) {
-        router.push("/404"); // Redireciona se o ID não for válido
-        return;
-      }
-
-      const docRef = doc(db, "orders", id);
       await updateDoc(docRef, {
         status: "cancelado",
       });
