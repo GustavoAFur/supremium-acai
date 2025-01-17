@@ -20,6 +20,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -39,6 +40,8 @@ import { BanIcon, Check, Printer } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
+import { PDFViewer } from "@react-pdf/renderer";
+import { PdfTicket } from "../../_components/pdfTicket";
 
 interface Methods {
   methodPayment: string;
@@ -50,6 +53,7 @@ const OrderDetails = () => {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isTicketOpen, setIsTicketOpen] = useState(false);
 
   const [order, setOrder] = useState<Order>();
 
@@ -220,8 +224,8 @@ const OrderDetails = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {order?.items.map((item) => (
-              <TableRow key={item.id}>
+            {order?.items.map((item, index) => (
+              <TableRow key={index}>
                 <TableCell className="capitalize">{item.name}</TableCell>
                 <TableCell>{item.quantity}</TableCell>
                 <TableCell className="text-right">
@@ -288,7 +292,13 @@ const OrderDetails = () => {
           </CardContent>
         </Card>
         <div className="mt-4 flex items-center justify-end gap-4">
-          <Button variant={"ghost"} className="border">
+          <Button
+            onClick={() => {
+              setIsTicketOpen(true);
+            }}
+            variant={"ghost"}
+            className="border"
+          >
             Imprimir
             <Printer />
           </Button>
@@ -377,6 +387,20 @@ const OrderDetails = () => {
           </Label>
 
           <Button onClick={finishOrder}>Finalizar</Button>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isTicketOpen} onOpenChange={setIsTicketOpen}>
+        <DialogContent className="w-[1200px] h-auto">
+          <DialogHeader>
+            <DialogTitle>Pre-view</DialogTitle>
+            <DialogDescription>
+              Tenha uma pre-visualização da nota
+            </DialogDescription>
+          </DialogHeader>
+          <PDFViewer width="100%" height="400">
+            <PdfTicket order={order as Order} />
+          </PDFViewer>
         </DialogContent>
       </Dialog>
     </GridContent>
