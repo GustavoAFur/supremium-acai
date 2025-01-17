@@ -75,13 +75,6 @@ const OrderDetails = () => {
 
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
 
-  if (!id) {
-    router.push("/404"); // Redireciona se o ID não for válido
-    return;
-  }
-
-  const docRef = doc(db, "orders", id);
-
   const Details = ({ title, content }: { title: string; content: string }) => {
     return (
       <div className="flex justify-between items-center">
@@ -94,6 +87,11 @@ const OrderDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (!id) {
+          router.push("/404"); // Redireciona se o ID não for válido
+          return;
+        }
+        const docRef = doc(db, "orders", id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -115,6 +113,11 @@ const OrderDetails = () => {
 
   const finishOrder = async () => {
     try {
+      if (!id) {
+        router.push("/404"); // Redireciona se o ID não for válido
+        return;
+      }
+      const docRef = doc(db, "orders", id);
       await updateDoc(docRef, {
         status: "fechado",
         paymentInfo: {
@@ -133,6 +136,11 @@ const OrderDetails = () => {
 
   const handleCancel = async () => {
     try {
+      if (!id) {
+        router.push("/404"); // Redireciona se o ID não for válido
+        return;
+      }
+      const docRef = doc(db, "orders", id);
       // Exibe uma mensagem de confirmação
       const userConfirmed = window.confirm(
         "Tem certeza de que deseja cancelar este pedido?"

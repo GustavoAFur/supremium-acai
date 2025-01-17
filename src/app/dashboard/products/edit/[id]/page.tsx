@@ -23,16 +23,15 @@ const EditProduct = () => {
 
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
 
-  if (!id) {
-    router.push("/404"); // Redireciona se o ID não for válido
-    return;
-  }
-
-  const docRef = doc(db, "products", id);
-
   const updateProduct = async () => {
     setIsUpdating(true);
     try {
+      if (!id) {
+        router.push("/404"); // Redireciona se o ID não for válido
+        return;
+      }
+
+      const docRef = doc(db, "products", id);
       await updateDoc(docRef, {
         name,
         price,
@@ -51,6 +50,12 @@ const EditProduct = () => {
   const deleteProduct = async () => {
     setIsDeleting(true);
     try {
+      if (!id) {
+        router.push("/404"); // Redireciona se o ID não for válido
+        return;
+      }
+
+      const docRef = doc(db, "products", id);
       const confirm = window.confirm("Deseja mesmo excluir o produto?");
       if (!confirm) return;
       await deleteDoc(docRef);
@@ -67,6 +72,12 @@ const EditProduct = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (!id) {
+          router.push("/404"); // Redireciona se o ID não for válido
+          return;
+        }
+
+        const docRef = doc(db, "products", id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {

@@ -14,9 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { PencilIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const Edit = () => {
