@@ -151,20 +151,6 @@ export const PdfTicket = ({ order }: { order: Order }) => (
         {order.orderType === "delivery" && (
           <>
             <View style={styles.clientInfo}>
-              <Text style={styles.clientInfoText}>Endereco:</Text>
-              <Text style={styles.clientInfoText}>
-                {order.deliveryInfo.address.slice(0, 20)}
-              </Text>
-            </View>
-
-            <View style={styles.clientInfo}>
-              <Text style={styles.clientInfoText}>Comp:</Text>
-              <Text style={styles.clientInfoText}>
-                {order.deliveryInfo.complement.slice(0, 20)}
-              </Text>
-            </View>
-
-            <View style={styles.clientInfo}>
               <Text style={styles.clientInfoText}>Tel:</Text>
               <Text style={styles.clientInfoText}>
                 {order.deliveryInfo.phone}
@@ -172,8 +158,22 @@ export const PdfTicket = ({ order }: { order: Order }) => (
             </View>
 
             <View style={{ width: "100%" }}>
+              <Text style={styles.clientInfoText}>Endereco:</Text>
+              <Text style={styles.clientInfoText}>
+                {order.deliveryInfo.address}
+              </Text>
+            </View>
+
+            <View style={{ width: "100%" }}>
+              <Text style={styles.clientInfoText}>Comp:</Text>
+              <Text style={styles.clientInfoText}>
+                {order.deliveryInfo.complement}
+              </Text>
+            </View>
+
+            <View style={{ width: "100%" }}>
               <Text style={styles.clientInfoText}>Obs:</Text>
-              <Text style={{ fontSize: 10 }}>
+              <Text style={styles.clientInfoText}>
                 {order.deliveryInfo.observation}
               </Text>
             </View>
@@ -187,12 +187,11 @@ export const PdfTicket = ({ order }: { order: Order }) => (
         </Text>
       </View>
 
-      <View style={styles.separator}>
-        <Text style={{ fontSize: 12 }}>Inf. Pagamento</Text>
-      </View>
-
       {order.status === "fechado" && (
         <View style={{ width: "100%" }}>
+          <View style={styles.separator}>
+            <Text style={{ fontSize: 12 }}>Inf. Pagamento</Text>
+          </View>
           {order.paymentInfo.paymentMethod.map((item, index) => (
             <View key={index} style={styles.paymentInfo}>
               <Text style={styles.paymentInfoText}>{item.methodPayment}</Text>
