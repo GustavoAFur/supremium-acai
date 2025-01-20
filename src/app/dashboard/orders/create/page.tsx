@@ -35,6 +35,8 @@ import { Trash2 } from "lucide-react";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 import { Button } from "@/components/ui/button";
+import { CalendarDateRangePicker } from "@/app/_components/date-range-picker";
+import { useRouter } from "next/navigation";
 
 interface OrderProducts {
   id: string;
@@ -52,6 +54,8 @@ export interface Products {
 }
 
 const CreateOrder = () => {
+  const router = useRouter();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -156,8 +160,26 @@ const CreateOrder = () => {
   }, []);
 
   return (
-    <GridContent>
-      <h1 className="text-3xl font-semibold">Criar Pedido</h1>
+    <div className="flex-1 space-y-4 p-8 pt-12">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Criar pedido</h2>
+
+        <div className="hidden items-center gap-2 md:ml-auto md:flex">
+          <Button
+            onClick={() => {
+              router.push("/dashboard/orders");
+            }}
+            variant="outline"
+            size="sm"
+          >
+            Descartar
+          </Button>
+          <Button type="submit" size="sm">
+            Salvar
+          </Button>
+        </div>
+      </div>
+
       <div className="flex gap-4">
         <Card className="min-w-[400px] max-h-[260px]">
           <CardHeader>
@@ -325,7 +347,7 @@ const CreateOrder = () => {
           </div>
         </DialogContent>
       </Dialog>
-    </GridContent>
+    </div>
   );
 };
 
