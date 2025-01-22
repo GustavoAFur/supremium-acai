@@ -13,123 +13,320 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RecentSales } from "../_components/recent-sales";
 import { Overview } from "../_components/overview";
 import Image from "next/image";
-import { ChevronRight, X } from "lucide-react";
-import { useState } from "react";
+import { ChevronRight, Search, X } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { deleteCookie, getCookie, setCookie } from "cookies-next/client";
+import { useEffect, useState } from "react";
+import { db } from "@/utils/firebaseConfig";
+import {
+  collection,
+  getDocs,
+  limit,
+  query,
+  where,
+  addDoc,
+} from "firebase/firestore";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export default function Page() {
+  const [registerToken, setRegisterToken] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [cashFund, setCashFund] = useState("");
+  const [cash, setCash] = useState(0);
+
+  // Função para abrir o caixa
+  const openCashRegister = async () => {
+    try {
+      const docRef = collection(db, "cashRegister");
+      const document = await addDoc(docRef, {
+        status: "aberto",
+        openingDate: new Date(),
+        closingDate: null,
+        totalCash: 0,
+        totalCard: 0,
+        totalPix: 0,
+        cashFund,
+        totalTransshipment: 0,
+        totalSales: 0,
+      });
+
+      setCookie("idCashRegister", document.id);
+      setRegisterToken(document.id); // Atualiza o estado local imediatamente
+
+      setIsOpen(false); // Fecha o modal
+    } catch (error) {
+      alert("Erro ao abrir o caixa");
+    }
+  };
+
+  // Atualiza o token ao carregar o componente
+  useEffect(() => {
+    const token = getCookie("idCashRegister");
+    setRegisterToken((token as string) || "");
+  }, []);
+
+  // Verifica se há um caixa aberto no Firestore e atualiza o token
+  useEffect(() => {
+    const fetchRegister = async () => {
+      if (registerToken) return;
+
+      try {
+        const q = query(
+          collection(db, "cashRegister"),
+          where("status", "==", "aberto"),
+          limit(1)
+        );
+        const registerDoc = await getDocs(q);
+
+        if (!registerDoc.empty) {
+          const id = registerDoc.docs[0].id;
+          setCash((registerDoc.docs[0].data() as any).cashFund);
+          setCookie("idCashRegister", id);
+          setRegisterToken(id); // Atualiza o estado local
+        } else {
+          deleteCookie("idCashRegister");
+          setRegisterToken("");
+          setIsOpen(true); // Abre o modal para criar um novo caixa
+        }
+      } catch (error) {
+        console.error("Erro ao buscar caixa aberto:", error);
+      }
+    };
+
+    fetchRegister();
+  }, [registerToken]); // Executa quando `registerToken` muda
+
   return (
     <div className="flex-1 space-y-4 p-8 pt-12 flex flex-col h-full justify-between">
-      <div>
-        <div className="flex items-center justify-between space-y-2">
-          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
 
-          <div className="flex items-center space-x-2">
-            <CalendarDateRangePicker />
-            <Button>Download</Button>
-          </div>
+        <div className="flex items-center space-x-2">
+          <CalendarDateRangePicker />
+          <Button>
+            <Search className="size-4" />
+            Buscar
+          </Button>
         </div>
+      </div>
 
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics">Análise</TabsTrigger>
-            <TabsTrigger value="reports">Relatórios</TabsTrigger>
-          </TabsList>
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid h-32 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <Card className="border-[#FDF4FF] group hover: cursor-pointer">
+              <CardContent className="bg-[#FDF4FF] h-full flex relative flex-row items-center justify-between space-y-0">
+                <Image
+                  src={"/image-bannerq.png"}
+                  className="absolute right-5 -top-6 "
+                  width={132}
+                  height={132}
+                  alt="Icon"
+                />
 
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid h-32 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="border-[#FDF4FF] group">
-                <CardContent className="bg-[#FDF4FF] h-full flex relative flex-row items-center justify-between space-y-0">
-                  <Image
-                    src={"/image-bannerq.png"}
-                    className="absolute right-5 -top-6 "
-                    width={132}
-                    height={132}
-                    alt="Icon"
-                  />
-
-                  <div className="">
-                    <div className="text-2xl font-semibold tracking-tight text-[#7E2D7A]">
-                      Pedidos de açaí
-                    </div>
-                    <div className="flex mt-2 items-center space-x-1">
-                      <p className="text-sm text-muted-foreground text-[#BB9ABA]">
-                        Clique para ver detalhes
-                      </p>
-
-                      <ChevronRight
-                        color="#BB9ABA"
-                        size={16}
-                        className="transition-transform transform group-hover:translate-x-1"
-                      />
-                    </div>
+                <div className="">
+                  <div className="text-2xl font-semibold tracking-tight text-[#7E2D7A]">
+                    Dados de açaí
                   </div>
-                </CardContent>
-              </Card>
+                  <div className="flex mt-2 items-center space-x-1">
+                    <p className="text-sm text-[#BB9ABA]">
+                      Alterar valores de açaí
+                    </p>
 
-              <Card className="border-[#FFE7E7] rounded-sm group">
-                <CardContent className="bg-[#FFE7E7] rounded-sm h-full flex relative flex-row items-center justify-between space-y-0">
-                  <Image
-                    src={"/image-bannerq.png"}
-                    className="absolute right-5 -top-6 "
-                    width={132}
-                    height={132}
-                    alt="Icon"
-                  />
-
-                  <div className="">
-                    <div className="text-2xl font-semibold tracking-tight text-[#A83856]">
-                      Pedidos de sorvete
-                    </div>
-                    <div className="flex mt-2 items-center space-x-1">
-                      <p className="text-sm text-muted-foreground text-[#B36177]">
-                        Clique para ver detalhes
-                      </p>
-
-                      <ChevronRight
-                        color="#B36177"
-                        size={16}
-                        className="transition-transform transform group-hover:translate-x-1"
-                      />
-                    </div>
+                    <ChevronRight
+                      color="#BB9ABA"
+                      size={16}
+                      className="transition-transform transform group-hover:translate-x-1"
+                    />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-[#FFF0F0] rounded-sm group hover: cursor-pointer">
+              <CardContent className="bg-[#FFF0F0] rounded-sm h-full flex relative flex-row items-center justify-between space-y-0">
+                <Image
+                  src={"/image-bannerq.png"}
+                  className="absolute right-5 -top-6 "
+                  width={132}
+                  height={132}
+                  alt="Icon"
+                />
+
+                <div className="">
+                  <div className="text-2xl font-semibold tracking-tight text-[#A83856]">
+                    Dados de sorvete
+                  </div>
+                  <div className="flex mt-2 items-center space-x-1">
+                    <p className="text-sm text-[#B36177]">
+                      Alterar valores de sorvete
+                    </p>
+
+                    <ChevronRight
+                      color="#B36177"
+                      size={16}
+                      className="transition-transform transform group-hover:translate-x-1"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              onClick={() => {
+                if (registerToken === "") {
+                  setIsOpen(true);
+                }
+              }}
+              className={` ${
+                registerToken === ""
+                  ? " border-[#FF8282] bg-[#FFEFEF]"
+                  : "border-[#0ECF93] bg-[#F7FFFD] hover:bg-[#F1FFFB]"
+              } rounded-sm group h-32 transition
+               duration-300 ease-in-out transform cursor-pointer`}
+            >
+              {registerToken === "" ? (
+                <div>
+                  <CardContent className="flex p-8 flex-col items-center justify-between">
+                    <div className="text-3xl text-[#DF3030] font-bold">
+                      Caixa fechado
+                    </div>
+                    <p className="text-sm mt-3 text-[#DF3030]">
+                      Clique para abrir o caixa.
+                    </p>
+                  </CardContent>
+                </div>
+              ) : (
+                <div>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm text-[#007C56] font-medium">
+                      <Badge
+                        variant="secondary"
+                        className="bg-[#00A874] text-white font-regular hover:bg-[#00A874] hover:text-white"
+                      >
+                        Caixa aberto
+                      </Badge>
+                    </CardTitle>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      className="h-4 w-4 text-[#007C56]"
+                    >
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl text-[#007C56] font-bold">
+                      {Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(cash)}
+                    </div>
+                    <p className="text-xs mt-2 text-[#396e5f]">
+                      Aberto às 18:00hs
+                    </p>
+                  </CardContent>
+                </div>
+              )}
+            </Card>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Overview</CardTitle>
+                <CardDescription>Todo o seu faturamento do ano</CardDescription>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview />
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-3">
+              <CardHeader>
+                <CardTitle>Vendas recentes</CardTitle>
+                <CardDescription>Você fez 265 vendas este mês.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <RecentSales />
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="h-44 bg-[#FFFEF8] border-[#FFFCED] relative w-full border-2 rounded-sm flex items-center">
+            <Image src="/suport.svg" width={360} height={240} alt="App" />
+
+            <div className="ml-12 flex flex-row h-full items-center justify-center gap-12">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight">
+                  Acesse nosso canal de suporte
+                </h2>
+                <p className="text-muted-foreground">
+                  Acesse nosso canal de suporte para tirar suas duvidas!
+                </p>
+              </div>
+
+              <button className="btn btn-primary font-semibold mt-4 bg-[#FFBD4F] px-6 py-4 rounded-sm">
+                Acessar suporte
+              </button>
             </div>
-          </TabsContent>
-        </Tabs>
-      </div>
 
-      <div className="h-44 bg-[#FFFEF8] border-[#FFFCED] relative w-full border-2 rounded-sm flex items-center">
-        <Image src="/suport.svg" width={360} height={240} alt="App" />
+            <Image
+              src="/love-emoji.svg"
+              width={83}
+              height={80}
+              alt="App"
+              className="absolute right-40 top-24"
+            />
 
-        <div className="ml-12 flex flex-row h-full items-center justify-center gap-12">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">
-              Acesse nosso canal de suporte
-            </h2>
-            <p className="text-muted-foreground">
-              Acesse nosso canal de suporte para tirar suas duvidas!
-            </p>
+            <button className="absolute right-4 top-4 btn btn-primary font-semibold bg-[#FFF4E1] p-4 rounded-md">
+              <X color="#FFBD4F" />
+            </button>
           </div>
+        </TabsContent>
+      </Tabs>
 
-          <button className="btn btn-primary font-semibold mt-4 bg-[#FFBD4F] px-6 py-4 rounded-sm">
-            Acessar suporte
-          </button>
-        </div>
-
-        <Image
-          src="/love-emoji.svg"
-          width={83}
-          height={80}
-          alt="App"
-          className="absolute right-40 top-24"
-        />
-
-        <button className="absolute right-4 top-4 btn btn-primary font-semibold bg-[#FFF4E1] p-4 rounded-md">
-          <X color="#FFBD4F" />
-        </button>
-      </div>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Abrir Caixa</DialogTitle>
+            <DialogDescription>
+              Abra um caixa para criar pedidos!
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-right">
+              Fundo de caixa
+            </Label>
+            <Input
+              id="name"
+              placeholder="Ex: 30.50"
+              value={cashFund}
+              className="col-span-3"
+              onChange={(e) => {
+                const cashFund = e.target.value;
+                if (/^\d*\.?\d*$/.test(cashFund)) setCashFund(cashFund);
+              }}
+            />
+          </div>
+          <DialogFooter>
+            <Button onClick={openCashRegister}>Abrir</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,7 +1,12 @@
 "use client";
 
-import GridContent from "@/app/_components/grid-content";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -31,12 +36,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useState, useEffect, useMemo } from "react";
-import { Trash2 } from "lucide-react";
+import { ChevronRight, Trash2 } from "lucide-react";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 import { Button } from "@/components/ui/button";
 import { CalendarDateRangePicker } from "@/app/_components/date-range-picker";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface OrderProducts {
   id: string;
@@ -164,7 +170,7 @@ const CreateOrder = () => {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Criar pedido</h2>
 
-        <div className="hidden items-center gap-2 md:ml-auto md:flex">
+        <div className="hidden items-center gap-2 md:ml-auto md:flex opacity-0">
           <Button
             onClick={() => {
               router.push("/dashboard/orders");
@@ -181,15 +187,59 @@ const CreateOrder = () => {
       </div>
 
       <div className="flex gap-4">
-        <Card className="min-w-[400px] max-h-[260px]">
+        <Card className="min-w-[600px]">
           <CardHeader>
-            <CardTitle>Produto</CardTitle>
+            <CardTitle className="text-2xl font-semibold tracking-tight">
+              Produtos
+            </CardTitle>
           </CardHeader>
-          <Separator />
-          <CardContent className="pt-4">
-            <div className="space-y-4">
-              <div className="flex gap-4">
-                <div className="space-y-2">
+          <CardContent>
+            <div className="space-y-6">
+              <div className="space-y-2 w-full">
+                <div className="grid h-60 gap-4 md:grid-cols-2">
+                  {products.map((product) => (
+                    <Card
+                      onClick={() => handleSelectChange(product.id)}
+                      key={product.id}
+                      className={`${
+                        selectedProduct?.id === product.id
+                          ? "border-[#7E2D7A] border-2 rounded-xl bg-[#FDF4FF]"
+                          : " rounded-xl bg-[#FEF8FF]"
+                      }  group hover: cursor-pointer`}
+                    >
+                      <CardContent className=" h-full pt-2 flex flex-col items-center justify-center">
+                        <Image
+                          src={
+                            product.name == "Sorvete"
+                              ? "/image-sorvete.png"
+                              : "/image-bannerq.png"
+                          }
+                          width={120}
+                          height={120}
+                          alt="Icon"
+                        />
+
+                        <div className="flex flex-col items-center">
+                          <div className="text-2xl font-semibold tracking-tight text-[#7E2D7A]">
+                            {product.name}
+                          </div>
+                          <div className="flex mt-2 items-center justify-center">
+                            <p className="text-sm text-[#BB9ABA]">
+                              {Intl.NumberFormat("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              }).format(Number(product.price))}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid gap-4">
+                <div className="space-y-4">
                   <Label>Quantidade</Label>
                   <Input
                     value={qtd}
@@ -200,24 +250,6 @@ const CreateOrder = () => {
                     placeholder="Ex: 0.400"
                     className="w-24"
                   />
-                </div>
-
-                <div className="space-y-2 w-full">
-                  <Label>Produto</Label>
-                  <Select onValueChange={handleSelectChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Escolha um produto" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {products.map((item) => (
-                        <SelectItem key={item.id} value={item.id}>
-                          {`${item.name} (R$  ${parseFloat(item.price).toFixed(
-                            2
-                          )} - ${item.und})`}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
               <div className="flex items-center justify-between">

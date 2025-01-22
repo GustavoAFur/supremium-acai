@@ -59,25 +59,6 @@ export default function LayoutPage({
               </li>
             </Link>
 
-            <Link href="/dashboard/products">
-              <li
-                className={`flex items-center justify-center w-[55px] h-[54px] rounded-[10px] hover:opacity-50 transition duration-300 ease-in-out ${
-                  pathname === "/dashboard/products" ? "bg-[#FDF4FF]" : ""
-                }`}
-              >
-                <Image
-                  src={`${
-                    pathname === "/dashboard/products"
-                      ? "/products-bold.svg"
-                      : "/products.svg"
-                  }`}
-                  width={22}
-                  height={22}
-                  alt="Logo App"
-                />
-              </li>
-            </Link>
-
             <Link href="/dashboard/cashflow">
               <li
                 className={`flex relative items-center justify-center w-[55px] h-[54px] rounded-[10px] hover:opacity-50 transition duration-300 ease-in-out ${
@@ -112,7 +93,7 @@ export default function LayoutPage({
         </div>
       </div>
 
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 h-screen overflow-y-auto">{children}</div>
     </main>
   );
 }

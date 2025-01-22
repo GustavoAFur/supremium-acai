@@ -1,58 +1,57 @@
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 const data = [
   {
     name: "Jan",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 45,
   },
   {
     name: "Fev",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
   {
     name: "Mar",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 45,
   },
   {
     name: "Abr",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
   {
     name: "Mai",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
   {
     name: "Jun",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
   {
     name: "Jul",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
   {
     name: "Ago",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
   {
     name: "Set",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
   {
     name: "Out",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
   {
     name: "Nov",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
   {
     name: "Dez",
-    total: Math.floor(Math.random() * 5000) + 1000,
+    total: 0,
   },
-]
+];
 
 export function Overview() {
-  
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>
@@ -78,5 +77,5 @@ export function Overview() {
         />
       </BarChart>
     </ResponsiveContainer>
-  )
+  );
 }
