@@ -525,12 +525,6 @@ const OrdersContent = () => {
 
           <Tabs defaultValue="month">
             <div className="flex items-center">
-              <TabsList>
-                <TabsTrigger value="day">Hoje</TabsTrigger>
-                <TabsTrigger value="week">Semana</TabsTrigger>
-                <TabsTrigger value="month">Mês</TabsTrigger>
-              </TabsList>
-
               <div className="ml-auto flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -567,15 +561,6 @@ const OrdersContent = () => {
                     </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="h-10 gap-1 text-sm"
-                >
-                  <File className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only">Exportar</span>
-                </Button>
               </div>
             </div>
 
