@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { db } from "@/utils/firebaseConfig";
 import { setCookie } from "cookies-next/client";
 import { addDoc, collection } from "firebase/firestore";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type OpenCashRegisterProps = {
@@ -38,6 +37,7 @@ const OpenCashRegister = ({ closeDialog }: OpenCashRegisterProps) => {
 
       setCookie("idCashRegister", document.id);
     } catch (error) {
+      console.log(error);
       alert("Erro ao abrir o caixa");
     } finally {
       handleAction();

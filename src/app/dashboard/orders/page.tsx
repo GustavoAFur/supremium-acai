@@ -34,7 +34,7 @@ import {
   X,
   XIcon,
 } from "lucide-react";
-import { useSearchParams, useRouter, useParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -138,7 +138,6 @@ const OrdersContent = () => {
   const [currentMonth, setCurrentMonth] = useState<number>(0);
   const search = useSearchParams();
   const status = search.get("status");
-  const params = useParams();
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);

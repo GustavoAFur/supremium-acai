@@ -115,7 +115,7 @@ const OrderDetails = () => {
     };
 
     fetchData();
-  }, [params, router]);
+  }, [params, router, id]);
 
   const incrementValuesToCashRegister = async () => {
     try {

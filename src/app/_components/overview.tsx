@@ -6,10 +6,10 @@ import { db } from "@/utils/firebaseConfig";
 
 export function Overview() {
   const [chartData, setChartData] = useState([
-    { name: "Jan", total: 30 },
+    { name: "Jan", total: 0 },
     { name: "Fev", total: 0 },
     { name: "Mar", total: 0 },
-    { name: "Abr", total: 30 },
+    { name: "Abr", total: 0 },
     { name: "Mai", total: 0 },
     { name: "Jun", total: 0 },
     { name: "Jul", total: 0 },
@@ -55,7 +55,7 @@ export function Overview() {
     }
 
     fetchOrders();
-  }, []);
+  }, [chartData]);
 
   return (
     <ResponsiveContainer width="100%" height={350}>

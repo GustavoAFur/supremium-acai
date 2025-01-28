@@ -22,7 +22,6 @@ export function CalendarDateRangePicker({
     to: new Date(),
   });
 
-  //@ts-ignore
   setDefaultOptions({ locale: ptBR });
 
   return (
@@ -55,7 +54,6 @@ export function CalendarDateRangePicker({
         <PopoverContent className="w-auto p-0" align="end">
           <Calendar
             initialFocus
-            //@ts-ignore
             locale={ptBR}
             mode="range"
             defaultMonth={date?.from}

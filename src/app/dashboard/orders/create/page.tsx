@@ -28,13 +28,11 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { useState, useEffect, useMemo } from "react";
-import { ChevronRight, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 import { Button } from "@/components/ui/button";
-import { CalendarDateRangePicker } from "@/app/_components/date-range-picker";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 

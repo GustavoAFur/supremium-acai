@@ -16,13 +16,12 @@ import OpenCashRegister from "@/app/_components/open-cash-register";
 import { deleteCookie, getCookie } from "cookies-next/client";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
-import { useRouter } from "next/navigation";
 
 export interface CashRegister {
   id: string;
   status: string;
-  openingDate: Date;
-  closingDate: Date | null;
+  openingDate: string;
+  closingDate: string | null;
   totalCash: number;
   totalCard: number;
   totalPix: number;
@@ -38,8 +37,6 @@ export default function CashFlow() {
   );
 
   const [cashRegister, setCashRegister] = useState<CashRegister>();
-
-  const route = useRouter();
 
   /**
    * const chartData = [
@@ -131,7 +128,9 @@ export default function CashFlow() {
       } else {
         setIsOpen(true);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

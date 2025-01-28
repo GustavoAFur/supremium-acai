@@ -92,7 +92,7 @@ const EditProduct = () => {
       }
     };
     fetchData();
-  }, [params, router]);
+  }, [params, router, id]);
 
   return (
     <GridContent>

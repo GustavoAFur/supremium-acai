@@ -1,6 +1,5 @@
 "use client";
 
-
 import { CalendarDateRangePicker } from "@/app/_components/date-range-picker";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,7 +28,6 @@ import { useEffect, useState } from "react";
 import { db } from "@/utils/firebaseConfig";
 import {
   collection,
-
   limit,
   onSnapshot,
   query,
@@ -39,12 +37,13 @@ import Link from "next/link";
 import OpenCashRegister from "../_components/open-cash-register";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { CashRegister } from "./cashflow/page";
 
 export default function Page() {
   const [registerToken, setRegisterToken] = useState<string | undefined>(
     undefined
   );
-  const [openDate, setOpenDate] = useState<Date>();
+  const [openDate, setOpenDate] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [cash, setCash] = useState(0);
 
@@ -64,12 +63,12 @@ export default function Page() {
       (snapshot) => {
         if (!snapshot.empty) {
           const doc = snapshot.docs[0];
-          const data = doc.data() as any;
+          const data = doc.data() as CashRegister;
           const id = doc.id;
 
-          const openingDate = data.openingDate?.toDate
-            ? data.openingDate.toDate()
-            : data.openingDate;
+          const openingDate = data.openingDate
+            ? new Date(Date.parse(data.openingDate)).toISOString()
+            : null;
 
           setOpenDate(openingDate);
           setCash(data.cashFund); // Atualiza o caixa atual
@@ -296,8 +295,6 @@ export default function Page() {
         </TabsContent>
       </Tabs>
 
-
-
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -312,7 +309,6 @@ export default function Page() {
               setIsOpen(false);
             }}
           />
-
         </DialogContent>
       </Dialog>
     </div>
