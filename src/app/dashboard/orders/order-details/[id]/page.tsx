@@ -1,11 +1,13 @@
 "use client";
 import GridContent from "@/app/_components/grid-content";
 import { db } from "@/utils/firebaseConfig";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, runTransaction, updateDoc } from "firebase/firestore";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { Order } from "../../page";
+
+import { getCookie } from "cookies-next/client";
 
 import {
   Table,
@@ -115,12 +117,66 @@ const OrderDetails = () => {
     fetchData();
   }, [params, router]);
 
+  const incrementValuesToCashRegister = async () => {
+    try {
+      const idRegister = getCookie("idCashRegister");
+
+      if (!idRegister || idRegister === "") {
+        return;
+      }
+
+      const registerRef = doc(db, "cashRegister", idRegister);
+
+      let totalCashOrder = 0;
+      let totalCardOrder = 0;
+      let totalPixOrder = 0;
+
+      paymentMethodList.forEach((methodList) => {
+        if (methodList.methodPayment === "dinheiro") {
+          totalCashOrder += parseFloat(methodList.value);
+        }
+        if (methodList.methodPayment === "cartao") {
+          totalCardOrder += parseFloat(methodList.value);
+        }
+        if (methodList.methodPayment === "pix") {
+          totalPixOrder += parseFloat(methodList.value);
+        }
+      });
+
+      await runTransaction(db, async (transaction) => {
+        const crDoc = await transaction.get(registerRef);
+        if (!crDoc.exists()) {
+          throw "Document does not exist!";
+        }
+
+        const newValueCach = crDoc.data().totalCash + totalCashOrder;
+        const newValueCard = crDoc.data().totalCard + totalCardOrder;
+        const newValuePix = crDoc.data().totalPix + totalPixOrder;
+        const newValueTransshipment =
+          crDoc.data().totalTransshipment + transshipment;
+        const newTotalSales = crDoc.data().totalSales + 1;
+        transaction.update(registerRef, {
+          totalCash: newValueCach,
+          totalCard: newValueCard,
+          totalPix: newValuePix,
+          totalTransshipment: newValueTransshipment,
+          totalSales: newTotalSales,
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const finishOrder = async () => {
     try {
       if (!id) {
         router.push("/404"); // Redireciona se o ID não for válido
         return;
       }
+
+      await incrementValuesToCashRegister();
+
       const docRef = doc(db, "orders", id);
       await updateDoc(docRef, {
         status: "fechado",

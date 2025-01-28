@@ -1,5 +1,6 @@
 "use client";
 
+
 import { CalendarDateRangePicker } from "@/app/_components/date-range-picker";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,10 +24,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { deleteCookie, setCookie } from "cookies-next/client";
+
 import { useEffect, useState } from "react";
 import { db } from "@/utils/firebaseConfig";
 import {
   collection,
+
   limit,
   onSnapshot,
   query,
@@ -293,6 +296,8 @@ export default function Page() {
         </TabsContent>
       </Tabs>
 
+
+
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -301,11 +306,13 @@ export default function Page() {
               Abra um caixa para criar pedidos!
             </DialogDescription>
           </DialogHeader>
+
           <OpenCashRegister
             closeDialog={() => {
               setIsOpen(false);
             }}
           />
+
         </DialogContent>
       </Dialog>
     </div>

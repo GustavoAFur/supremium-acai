@@ -1,5 +1,10 @@
 "use client";
-import { ClipboardPenLine, HomeIcon, IceCreamBowl } from "lucide-react";
+import {
+  ClipboardPenLine,
+  HandCoinsIcon,
+  HomeIcon,
+  IceCreamBowl,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -117,6 +122,32 @@ export function AppSidebar() {
                           className="block p-2 hover:bg-gray-200"
                         >
                           Cancelados
+                        </Link>
+                      </SidebarMenuSubItem>
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              <Collapsible>
+                {/* Menu Item Principal */}
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton>
+                      <HandCoinsIcon />
+                      <span>Caixa</span>
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  {/* Conteúdo Expansível */}
+                  <CollapsibleContent className="pl-4">
+                    <SidebarMenuSub>
+                      {/* Subitens do Menu */}
+                      <SidebarMenuSubItem>
+                        <Link
+                          href="/dashboard/cash-register"
+                          className="block p-2 hover:bg-gray-200"
+                        >
+                          Criar
                         </Link>
                       </SidebarMenuSubItem>
                     </SidebarMenuSub>
