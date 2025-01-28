@@ -35,15 +35,13 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import OpenCashRegister from "../_components/open-cash-register";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+
 import { CashRegister } from "./cashflow/page";
 
 export default function Page() {
   const [registerToken, setRegisterToken] = useState<string | undefined>(
     undefined
   );
-  const [openDate, setOpenDate] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [cash, setCash] = useState(0);
 
@@ -66,11 +64,6 @@ export default function Page() {
           const data = doc.data() as CashRegister;
           const id = doc.id;
 
-          const openingDate = data.openingDate
-            ? new Date(Date.parse(data.openingDate)).toISOString()
-            : null;
-
-          setOpenDate(openingDate);
           setCash(data.cashFund); // Atualiza o caixa atual
           setCookie("idCashRegister", id); // Define o ID no cookie
           setRegisterToken(id); // Atualiza o estado local
@@ -220,15 +213,6 @@ export default function Page() {
                       }).format(cash)}
                       <span className="text-xs">(Fundo de caixa)</span>
                     </div>
-                    <p className="text-xs mt-2 text-[#396e5f]">
-                      {openDate
-                        ? `Aberto ${format(
-                            openDate,
-                            "HH:mm ',' dd 'de' MMMM 'de' yyyy",
-                            { locale: ptBR }
-                          )}`
-                        : "Data de abertura indisponível"}{" "}
-                    </p>
                   </CardContent>
                 </div>
               )}

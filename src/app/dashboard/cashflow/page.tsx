@@ -106,8 +106,20 @@ export default function CashFlow() {
 
   function calculateTotal() {
     if (cashRegister) {
-      const { totalCash = 0, totalCard = 0, totalPix = 0 } = cashRegister;
-      return (totalCash + totalCard + totalPix).toLocaleString("pt-BR", {
+      const {
+        totalCash = 0,
+        totalCard = 0,
+        totalPix = 0,
+        cashFund = 0,
+      } = cashRegister;
+
+      const total =
+        Number(totalCash) +
+        Number(totalCard) +
+        Number(totalPix) +
+        Number(cashFund);
+
+      return total.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL",
       });
