@@ -1,23 +1,7 @@
 "use client";
 
-import { RecentSales } from "@/app/_components/recent-sales";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import {
   Dialog,
   DialogContent,
@@ -25,21 +9,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import { TrendingUp } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import OpenCashRegister from "@/app/_components/open-cash-register";
 import { deleteCookie, getCookie } from "cookies-next/client";
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 import { useRouter } from "next/navigation";
 

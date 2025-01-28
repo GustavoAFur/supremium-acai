@@ -22,12 +22,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { deleteCookie, getCookie, setCookie } from "cookies-next/client";
+import { deleteCookie, setCookie } from "cookies-next/client";
 import { useEffect, useState } from "react";
 import { db } from "@/utils/firebaseConfig";
 import {
   collection,
-  getDocs,
   limit,
   onSnapshot,
   query,
@@ -35,7 +34,7 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import OpenCashRegister from "../_components/open-cash-register";
-import { format, setDate } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export default function Page() {
