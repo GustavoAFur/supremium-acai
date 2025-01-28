@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { RecentSales } from "../_components/recent-sales";
 import { Overview } from "../_components/overview";
 import Image from "next/image";
@@ -19,7 +19,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -30,80 +29,65 @@ import {
   collection,
   getDocs,
   limit,
+  onSnapshot,
   query,
   where,
-  addDoc,
 } from "firebase/firestore";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import OpenCashRegister from "../_components/open-cash-register";
+import { format, setDate } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export default function Page() {
-  const [registerToken, setRegisterToken] = useState("");
+  const [registerToken, setRegisterToken] = useState<string | undefined>(
+    undefined
+  );
+  const [openDate, setOpenDate] = useState<Date>();
   const [isOpen, setIsOpen] = useState(false);
-  const [cashFund, setCashFund] = useState("");
   const [cash, setCash] = useState(0);
-
-  // Função para abrir o caixa
-  const openCashRegister = async () => {
-    try {
-      const docRef = collection(db, "cashRegister");
-      const document = await addDoc(docRef, {
-        status: "aberto",
-        openingDate: new Date(),
-        closingDate: null,
-        totalCash: 0,
-        totalCard: 0,
-        totalPix: 0,
-        cashFund,
-        totalTransshipment: 0,
-        totalSales: 0,
-      });
-
-      setCookie("idCashRegister", document.id);
-      setRegisterToken(document.id); // Atualiza o estado local imediatamente
-
-      setIsOpen(false); // Fecha o modal
-    } catch (error) {
-      alert("Erro ao abrir o caixa");
-    }
-  };
-
-  // Atualiza o token ao carregar o componente
-  useEffect(() => {
-    const token = getCookie("idCashRegister");
-    setRegisterToken((token as string) || "");
-  }, []);
 
   // Verifica se há um caixa aberto no Firestore e atualiza o token
   useEffect(() => {
-    const fetchRegister = async () => {
-      if (registerToken) return;
+    if (registerToken) return;
 
-      try {
-        const q = query(
-          collection(db, "cashRegister"),
-          where("status", "==", "aberto"),
-          limit(1)
-        );
-        const registerDoc = await getDocs(q);
+    const q = query(
+      collection(db, "cashRegister"),
+      where("status", "==", "aberto"),
+      limit(1)
+    );
 
-        if (!registerDoc.empty) {
-          const id = registerDoc.docs[0].id;
-          setCash((registerDoc.docs[0].data() as any).cashFund);
-          setCookie("idCashRegister", id);
+    // Listener em tempo real
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const doc = snapshot.docs[0];
+          const data = doc.data() as any;
+          const id = doc.id;
+
+          const openingDate = data.openingDate?.toDate
+            ? data.openingDate.toDate()
+            : data.openingDate;
+
+          setOpenDate(openingDate);
+          setCash(data.cashFund); // Atualiza o caixa atual
+          setCookie("idCashRegister", id); // Define o ID no cookie
           setRegisterToken(id); // Atualiza o estado local
         } else {
+          // Caso nenhum caixa esteja aberto
           deleteCookie("idCashRegister");
-          setRegisterToken("");
+          setRegisterToken(undefined);
           setIsOpen(true); // Abre o modal para criar um novo caixa
         }
-      } catch (error) {
-        console.error("Erro ao buscar caixa aberto:", error);
+      },
+      (error) => {
+        console.error("Erro ao monitorar o caixa aberto:", error);
       }
-    };
+    );
 
-    fetchRegister();
-  }, [registerToken]); // Executa quando `registerToken` muda
+    // Limpeza do listener quando o componente é desmontado
+    return () => unsubscribe();
+  }, [registerToken]);
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-12 flex flex-col h-full justify-between">
@@ -132,7 +116,7 @@ export default function Page() {
                   alt="Icon"
                 />
 
-                <div className="">
+                <Link href="/dashboard/products/edit/JYgF5Jz1OfEMwHluoNrl">
                   <div className="text-2xl font-semibold tracking-tight text-[#7E2D7A]">
                     Dados de açaí
                   </div>
@@ -147,21 +131,21 @@ export default function Page() {
                       className="transition-transform transform group-hover:translate-x-1"
                     />
                   </div>
-                </div>
+                </Link>
               </CardContent>
             </Card>
 
             <Card className="border-[#FFF0F0] rounded-sm group hover: cursor-pointer">
               <CardContent className="bg-[#FFF0F0] rounded-sm h-full flex relative flex-row items-center justify-between space-y-0">
                 <Image
-                  src={"/image-bannerq.png"}
+                  src={"/image-sorvete.png"}
                   className="absolute right-5 -top-6 "
                   width={132}
                   height={132}
                   alt="Icon"
                 />
 
-                <div className="">
+                <Link href="/dashboard/products/edit/8bkNaGQ37bmIMvJyji6V">
                   <div className="text-2xl font-semibold tracking-tight text-[#A83856]">
                     Dados de sorvete
                   </div>
@@ -176,24 +160,23 @@ export default function Page() {
                       className="transition-transform transform group-hover:translate-x-1"
                     />
                   </div>
-                </div>
+                </Link>
               </CardContent>
             </Card>
-
             <Card
               onClick={() => {
-                if (registerToken === "") {
+                if (registerToken === undefined) {
                   setIsOpen(true);
                 }
               }}
               className={` ${
-                registerToken === ""
+                registerToken === undefined
                   ? " border-[#FF8282] bg-[#FFEFEF]"
                   : "border-[#0ECF93] bg-[#F7FFFD] hover:bg-[#F1FFFB]"
               } rounded-sm group h-32 transition
                duration-300 ease-in-out transform cursor-pointer`}
             >
-              {registerToken === "" ? (
+              {registerToken === undefined ? (
                 <div>
                   <CardContent className="flex p-8 flex-col items-center justify-between">
                     <div className="text-3xl text-[#DF3030] font-bold">
@@ -234,9 +217,16 @@ export default function Page() {
                         style: "currency",
                         currency: "BRL",
                       }).format(cash)}
+                      <span className="text-xs">(Fundo de caixa)</span>
                     </div>
                     <p className="text-xs mt-2 text-[#396e5f]">
-                      Aberto às 18:00hs
+                      {openDate
+                        ? `Aberto ${format(
+                            openDate,
+                            "HH:mm ',' dd 'de' MMMM 'de' yyyy",
+                            { locale: ptBR }
+                          )}`
+                        : "Data de abertura indisponível"}{" "}
                     </p>
                   </CardContent>
                 </div>
@@ -258,7 +248,9 @@ export default function Page() {
             <Card className="col-span-3">
               <CardHeader>
                 <CardTitle>Vendas recentes</CardTitle>
-                <CardDescription>Você fez 265 vendas este mês.</CardDescription>
+                <CardDescription>
+                  Veja os ultimos pedidos finalizados
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <RecentSales />
@@ -279,9 +271,12 @@ export default function Page() {
                 </p>
               </div>
 
-              <button className="btn btn-primary font-semibold mt-4 bg-[#FFBD4F] px-6 py-4 rounded-sm">
+              <Button
+                size={"lg"}
+                className="btn btn-primary font-semibold mt-4 bg-[#FFBD4F] px-6 py-7 rounded-sm"
+              >
                 Acessar suporte
-              </button>
+              </Button>
             </div>
 
             <Image
@@ -292,9 +287,9 @@ export default function Page() {
               className="absolute right-40 top-24"
             />
 
-            <button className="absolute right-4 top-4 btn btn-primary font-semibold bg-[#FFF4E1] p-4 rounded-md">
+            <Button className="absolute right-4 top-4 btn btn-primary font-semibold bg-[#FFF4E1] p-4 rounded-md">
               <X color="#FFBD4F" />
-            </button>
+            </Button>
           </div>
         </TabsContent>
       </Tabs>
@@ -307,24 +302,11 @@ export default function Page() {
               Abra um caixa para criar pedidos!
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-right">
-              Fundo de caixa
-            </Label>
-            <Input
-              id="name"
-              placeholder="Ex: 30.50"
-              value={cashFund}
-              className="col-span-3"
-              onChange={(e) => {
-                const cashFund = e.target.value;
-                if (/^\d*\.?\d*$/.test(cashFund)) setCashFund(cashFund);
-              }}
-            />
-          </div>
-          <DialogFooter>
-            <Button onClick={openCashRegister}>Abrir</Button>
-          </DialogFooter>
+          <OpenCashRegister
+            closeDialog={() => {
+              setIsOpen(false);
+            }}
+          />
         </DialogContent>
       </Dialog>
     </div>

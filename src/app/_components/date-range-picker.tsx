@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { subDays, format, setDefaultOptions } from "date-fns";
@@ -27,7 +28,7 @@ export function CalendarDateRangePicker({
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
-        <PopoverTrigger>
+        <PopoverTrigger asChild>
           <Button
             id="date"
             variant={"outline"}

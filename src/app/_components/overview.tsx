@@ -1,60 +1,65 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-
-const data = [
-  {
-    name: "Jan",
-    total: 45,
-  },
-  {
-    name: "Fev",
-    total: 0,
-  },
-  {
-    name: "Mar",
-    total: 45,
-  },
-  {
-    name: "Abr",
-    total: 0,
-  },
-  {
-    name: "Mai",
-    total: 0,
-  },
-  {
-    name: "Jun",
-    total: 0,
-  },
-  {
-    name: "Jul",
-    total: 0,
-  },
-  {
-    name: "Ago",
-    total: 0,
-  },
-  {
-    name: "Set",
-    total: 0,
-  },
-  {
-    name: "Out",
-    total: 0,
-  },
-  {
-    name: "Nov",
-    total: 0,
-  },
-  {
-    name: "Dez",
-    total: 0,
-  },
-];
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "@/utils/firebaseConfig";
 
 export function Overview() {
+  const [chartData, setChartData] = useState([
+    { name: "Jan", total: 30 },
+    { name: "Fev", total: 0 },
+    { name: "Mar", total: 0 },
+    { name: "Abr", total: 30 },
+    { name: "Mai", total: 0 },
+    { name: "Jun", total: 0 },
+    { name: "Jul", total: 0 },
+    { name: "Ago", total: 0 },
+    { name: "Set", total: 0 },
+    { name: "Out", total: 0 },
+    { name: "Nov", total: 0 },
+    { name: "Dez", total: 0 },
+  ]);
+
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const q = query(collection(db, "orders"));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          console.log("Nenhum pedido encontrado.");
+          return;
+        }
+
+        const monthlyTotals = Array(12).fill(0);
+
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const createdAt = data.createdAt?.toDate();
+
+          if (createdAt) {
+            const monthIndex = createdAt.getMonth();
+            monthlyTotals[monthIndex] += data.totalPrice || 0;
+          }
+        });
+
+        const updatedData = chartData.map((item, index) => ({
+          ...item,
+          total: monthlyTotals[index],
+        }));
+
+        setChartData(updatedData);
+      } catch (error) {
+        console.error("Erro ao buscar pedidos:", error);
+      }
+    }
+
+    fetchOrders();
+  }, []);
+
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
+      <BarChart data={chartData}>
         <XAxis
           dataKey="name"
           stroke="#888888"

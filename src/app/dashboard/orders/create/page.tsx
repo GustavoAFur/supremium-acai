@@ -354,7 +354,7 @@ const CreateOrder = () => {
                   }}
                 />
                 <Input
-                  placeholder="Observaçãp"
+                  placeholder="Observação"
                   value={observation}
                   onChange={(e) => {
                     setObservation(e.target.value);

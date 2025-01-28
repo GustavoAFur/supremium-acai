@@ -9,9 +9,7 @@ import {
   where,
   onSnapshot,
   orderBy,
-  getDocs,
   doc,
-  getDoc,
   runTransaction,
   updateDoc,
 } from "firebase/firestore";
@@ -20,7 +18,6 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -28,21 +25,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  ArrowRight,
   Check,
   ChevronLeft,
   ChevronRight,
-  Copy,
-  CreditCard,
-  File,
   ListFilter,
-  MoreVertical,
   ReceiptText,
   Search,
   X,
   XIcon,
 } from "lucide-react";
-import Link from "next/link";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import {
   Card,
@@ -54,12 +45,11 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -80,7 +70,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
-import { is, ptBR } from "date-fns/locale";
+import { ptBR } from "date-fns/locale";
 import { getCookie } from "cookies-next/client";
 import {
   Dialog,
@@ -159,6 +149,8 @@ const OrdersContent = () => {
   const [selectedMethod, setSelectedMethod] = useState("");
   const [transshipment, setTransshipment] = useState(0);
 
+  const [idRegister, setIdRegister] = useState("");
+
   const currentPaymentMethod = [
     {
       label: "Dinheiro",
@@ -174,21 +166,12 @@ const OrdersContent = () => {
     },
   ];
 
-  const Details = ({ title, content }: { title: string; content: string }) => {
-    return (
-      <div className="flex justify-between items-center">
-        <p className="font-semibold">{title}</p>
-        <p className="capitalize">{content}</p>
-      </div>
-    );
-  };
-
   // Listener para atualizações em tempo real
   const fetchRealTimeData = useCallback(() => {
     const q = query(
       collection(db, "orders"),
       where("status", "==", status),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "asc")
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -279,6 +262,11 @@ const OrdersContent = () => {
     return () => unsubscribe();
   }, [fetchRealTimeMonthData]);
 
+  useEffect(() => {
+    const register = getCookie("idCashRegister");
+    setIdRegister(register as string);
+  }, []);
+
   const incrementValuesToCashRegister = async () => {
     try {
       const idRegister = getCookie("idCashRegister");
@@ -349,6 +337,7 @@ const OrdersContent = () => {
         },
       }).then(() => {
         setIsOpen(false);
+        setOrder({} as Order);
         router.push("/dashboard/orders?status=aberto");
       });
     } catch (error) {
@@ -454,7 +443,10 @@ const OrdersContent = () => {
                 </CardDescription>
               </CardHeader>
               <CardFooter>
-                <Button onClick={() => router.push("/dashboard/orders/create")}>
+                <Button
+                  disabled={idRegister === "" || idRegister === undefined}
+                  onClick={() => router.push("/dashboard/orders/create")}
+                >
                   Criar pedido
                 </Button>
               </CardFooter>
@@ -601,7 +593,7 @@ const OrdersContent = () => {
                             }}
                             style={{ cursor: "pointer" }}
                           >
-                            <TableCell>{(item as any).name}</TableCell>
+                            <TableCell>{item.name}</TableCell>
                             <TableCell className="hidden sm:table-cell capitalize">
                               {item.orderType}
                             </TableCell>
@@ -641,7 +633,7 @@ const OrdersContent = () => {
                                 ).slice(1)}
                             </TableCell>
                             <TableCell className="text-right">
-                              R$ {(item as any).totalPrice.toFixed(2)}
+                              R$ {item.totalPrice.toFixed(2)}
                             </TableCell>
                           </TableRow>
                         );
@@ -697,9 +689,7 @@ const OrdersContent = () => {
                 </Button>
 
                 <Button
-                  onClick={() => {
-                    handleCancel();
-                  }}
+                  onClick={handleCancel}
                   variant="ghost"
                   disabled={order.status !== "aberto"}
                   className={`${
@@ -712,7 +702,7 @@ const OrdersContent = () => {
                 <Button
                   disabled={order.status !== "aberto"}
                   onClick={() => {
-                    finishOrder();
+                    setIsOpen(true);
                   }}
                   variant="ghost"
                   className={`${
@@ -751,42 +741,13 @@ const OrdersContent = () => {
                 <Separator className="my-2" />
 
                 <ul className="grid gap-3">
-                  <li className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Subtotal</span>
-                    <span>
-                      {Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      }).format(
-                        order.items.reduce(
-                          (sum, item) =>
-                            sum + parseFloat(item.price) * item.quantity,
-                          0
-                        )
-                      )}
-                    </span>
-                  </li>
-                  <li className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Envio</span>
-                    <span>R$0.00</span>
-                  </li>
-                  <li className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Taxa</span>
-                    <span>R$0.00</span>
-                  </li>
                   <li className="flex items-center justify-between font-semibold">
                     <span className="text-muted-foreground">Total</span>
                     <span>
                       {Intl.NumberFormat("pt-BR", {
                         style: "currency",
                         currency: "BRL",
-                      }).format(
-                        order.items.reduce(
-                          (sum, item) =>
-                            sum + parseFloat(item.price) * item.quantity,
-                          0
-                        )
-                      )}
+                      }).format(order.totalPrice)}
                     </span>
                   </li>
                 </ul>
