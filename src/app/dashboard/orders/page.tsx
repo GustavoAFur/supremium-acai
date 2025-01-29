@@ -159,6 +159,8 @@ const OrdersContent = () => {
   const [selectedMethod, setSelectedMethod] = useState("");
   const [transshipment, setTransshipment] = useState(0);
 
+  const [keyPressed, setKeyPressed] = useState("");
+
   const currentPaymentMethod = [
     {
       label: "Dinheiro",
@@ -383,6 +385,25 @@ const OrdersContent = () => {
     }
   };
 
+  useEffect(() => {
+    // Função para lidar com o evento de tecla pressionada
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const tecla = event.key;
+      setKeyPressed(tecla); // Atualiza o estado com a tecla pressionada
+
+      if (tecla === "P") {
+        router.push("/dashboard/orders/create");
+      }
+    };
+
+    // Adiciona o listener ao carregar o componente
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Remove o listener ao desmontar o componente
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
   const handleSelectChange = (value: string) => {
     setSelectedMethod(value); // Atualiza o método de pagamento selecionado
   };
@@ -454,8 +475,17 @@ const OrdersContent = () => {
                 </CardDescription>
               </CardHeader>
               <CardFooter>
-                <Button onClick={() => router.push("/dashboard/orders/create")}>
-                  Criar pedido
+                <Button
+                  onClick={() => router.push("/dashboard/orders/create")}
+                  className="py-6 text-sm"
+                >
+                  Criar pedido{" "}
+                  <Badge
+                    variant="secondary"
+                    className="ml-2 h-6 rounded-[6px] text-sm font-sans border-[1px] border-[#721a82] bg-[#751187] text-[#f7ecff] hover:bg-[#721a82] hover:text-[#eed8ff]"
+                  >
+                    ⇧P
+                  </Badge>
                 </Button>
               </CardFooter>
             </Card>
