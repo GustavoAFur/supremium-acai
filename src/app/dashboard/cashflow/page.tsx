@@ -199,7 +199,12 @@ export default function CashFlow() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-primary">
-                  {cashRegister?.totalCash}
+                  {Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(
+                    parseFloat(cashRegister?.totalCash?.toString() ?? "0")
+                  )}
                 </div>
                 <p className="text-xs mt-2 text-muted-foreground">
                   +100% do mês passado (sem dados para calcular)
@@ -226,7 +231,12 @@ export default function CashFlow() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-primary">
-                  {cashRegister?.totalCard}
+                  {Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(
+                    parseFloat(cashRegister?.totalCard?.toString() ?? "0")
+                  )}
                 </div>
                 <p className="text-xs mt-2 text-muted-foreground">
                   +100% do mês passado (sem dados para calcular)
@@ -252,7 +262,12 @@ export default function CashFlow() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-primary">
-                  {cashRegister?.totalPix}
+                  {Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(
+                    parseFloat(cashRegister?.totalPix?.toString() ?? "0")
+                  )}
                 </div>
                 <p className="text-xs mt-2 text-muted-foreground">
                   +100% do mês passado (sem dados para calcular)
