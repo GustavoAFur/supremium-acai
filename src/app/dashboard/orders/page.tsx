@@ -954,7 +954,7 @@ const OrdersContent = () => {
           <Label>
             A pagar:{" "}
             {(order?.totalPrice || 0) - totalPayed > 0
-              ? `${(order?.totalPrice || 0) - totalPayed}`
+              ? `${((order?.totalPrice || 0) - totalPayed).toFixed(2)}`
               : "0.00"}
           </Label>
 
