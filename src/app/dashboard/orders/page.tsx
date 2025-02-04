@@ -31,6 +31,7 @@ import {
   ListFilter,
   ReceiptText,
   Search,
+  Trash2,
   X,
   XIcon,
 } from "lucide-react";
@@ -165,6 +166,9 @@ const OrdersContent = () => {
     },
   ];
 
+  const removePaymentMethod = (index: number) => {
+    setPaymentMethodList((prev) => prev.filter((_, i) => i !== index));
+  };
   // Listener para atualizações em tempo real
   const fetchRealTimeData = useCallback(() => {
     const q = query(
@@ -939,6 +943,14 @@ const OrdersContent = () => {
                       {item.methodPayment}
                     </TableCell>
                     <TableCell>{item.value}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant={"ghost"}
+                        onClick={() => removePaymentMethod(index)}
+                      >
+                        <Trash2 />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
