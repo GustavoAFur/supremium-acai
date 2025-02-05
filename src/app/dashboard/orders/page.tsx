@@ -381,7 +381,8 @@ const OrdersContent = () => {
 
   const handleAddMethodsPayment = () => {
     const addedValue = parseFloat(value);
-    const orderTotalPrice = order?.totalPrice || 0;
+    const orderTotal = (order?.totalPrice || 0).toFixed(2);
+    const orderTotalPrice = parseFloat(orderTotal);
 
     if (
       selectedMethod === "dinheiro" &&
