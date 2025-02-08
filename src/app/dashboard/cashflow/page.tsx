@@ -203,7 +203,12 @@ export default function CashFlow() {
                     style: "currency",
                     currency: "BRL",
                   }).format(
-                    parseFloat(cashRegister?.totalCash?.toString() ?? "0")
+                    parseFloat(
+                      (
+                        (cashRegister?.totalCash || 0) -
+                        (cashRegister?.totalTransshipment || 0)
+                      ).toString() ?? "0"
+                    )
                   )}
                 </div>
                 <p className="text-xs mt-2 text-muted-foreground">

@@ -228,7 +228,7 @@ const OrdersContent = () => {
       collection(db, "orders"),
       where("createdAt", ">=", startOfCurrentMonth),
       where("createdAt", "<=", endOfCurrentMonth),
-      orderBy("createdAt", "asc")
+      orderBy("createdAt", "desc")
     );
 
     const unsubscribe = onSnapshot(ordersQuery, (snapshot) => {
