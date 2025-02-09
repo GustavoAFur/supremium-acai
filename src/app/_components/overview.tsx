@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 
 export function Overview() {
@@ -23,7 +23,10 @@ export function Overview() {
   useEffect(() => {
     async function fetchOrders() {
       try {
-        const q = query(collection(db, "orders"));
+        const q = query(
+          collection(db, "orders"),
+          where("status", "!=", "cancelado")
+        );
         const snapshot = await getDocs(q);
 
         if (snapshot.empty) {

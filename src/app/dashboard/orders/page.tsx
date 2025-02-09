@@ -55,7 +55,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Pagination,
@@ -67,7 +66,6 @@ import {
   endOfMonth,
   endOfWeek,
   format,
-  formatRelative,
   startOfMonth,
   startOfWeek,
 } from "date-fns";
@@ -89,6 +87,8 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DataTable } from "./_components/data-table";
+import { columns } from "./_components/columns";
 
 interface Payment {
   methodPayment: string;
@@ -142,6 +142,7 @@ const OrdersContent = () => {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isFinishing, setIsFinishing] = useState(false);
   const [isTicketOpen, setIsTicketOpen] = useState(false);
 
   const [paymentMethodList, setPaymentMethodList] = useState<Methods[]>([]);
@@ -165,6 +166,11 @@ const OrdersContent = () => {
       value: "cartao",
     },
   ];
+
+  const handleRowClick = (row: Order) => {
+    setOrder(row);
+    console.log("Linha selecionada:", row);
+  };
 
   const removePaymentMethod = (index: number) => {
     setPaymentMethodList((prev) => prev.filter((_, i) => i !== index));
@@ -204,7 +210,7 @@ const OrdersContent = () => {
       collection(db, "orders"),
       where("createdAt", ">=", startOfCurrentWeek),
       where("createdAt", "<=", endOfCurrentWeek),
-      orderBy("createdAt", "asc")
+      where("status", "!=", "cancelado")
     );
 
     const unsubscribe = onSnapshot(ordersQuery, (snapshot) => {
@@ -228,7 +234,7 @@ const OrdersContent = () => {
       collection(db, "orders"),
       where("createdAt", ">=", startOfCurrentMonth),
       where("createdAt", "<=", endOfCurrentMonth),
-      orderBy("createdAt", "asc")
+      where("status", "!=", "cancelado")
     );
 
     const unsubscribe = onSnapshot(ordersQuery, (snapshot) => {
@@ -322,6 +328,7 @@ const OrdersContent = () => {
   };
 
   const finishOrder = async () => {
+    setIsFinishing(true);
     try {
       if (!order?.id) {
         router.push("/404"); // Redireciona se o ID não for válido
@@ -340,6 +347,7 @@ const OrdersContent = () => {
         },
       }).then(() => {
         setIsOpen(false);
+        setIsFinishing(false);
         setOrder({} as Order);
         router.push("/dashboard/orders?status=aberto");
       });
@@ -552,7 +560,12 @@ const OrdersContent = () => {
                     >
                       Fechados
                     </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                      checked={status === "cancelado"}
+                      onClick={() => {
+                        router.push(`/dashboard/orders?status=cancelado`);
+                      }}
+                    >
                       Cancelados
                     </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
@@ -570,7 +583,7 @@ const OrdersContent = () => {
                 </CardHeader>
 
                 <CardContent>
-                  <Table>
+                  {/*<Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>Cliente</TableHead>
@@ -643,7 +656,12 @@ const OrdersContent = () => {
                         );
                       })}
                     </TableBody>
-                  </Table>
+                  </Table>*/}
+                  <DataTable
+                    columns={columns}
+                    data={orders}
+                    onRowClick={handleRowClick}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>
@@ -971,7 +989,9 @@ const OrdersContent = () => {
               : "0.00"}
           </Label>
 
-          <Button onClick={finishOrder}>Finalizar</Button>
+          <Button disabled={isFinishing} onClick={finishOrder}>
+            Finalizar
+          </Button>
         </DialogContent>
       </Dialog>
 
