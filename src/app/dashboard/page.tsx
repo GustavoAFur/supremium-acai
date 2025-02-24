@@ -261,6 +261,9 @@ export default function Page() {
 
                 <Button
                   size={"lg"}
+                  onClick={() => {
+                    window.open("https://wa.me/5588998068548", "_blank");
+                  }}
                   className="btn btn-primary font-semibold mt-4 bg-[#FFBD4F] px-6 py-7 rounded-sm"
                 >
                   Acessar suporte
