@@ -32,7 +32,6 @@ import {
   EyeOff,
   ListFilter,
   ReceiptText,
-  Search,
   Trash2,
   X,
   XIcon,
@@ -63,7 +62,6 @@ import {
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
-import { CalendarDateRangePicker } from "@/app/_components/date-range-picker";
 import {
   endOfMonth,
   endOfWeek,

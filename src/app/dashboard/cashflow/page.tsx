@@ -34,7 +34,6 @@ export interface CashRegister {
 
 export default function CashFlow() {
   const [isOpen, setIsOpen] = useState(false);
-  const viewValues = getCookie("viewValues") as string | null;
   const [registerToken, setRegisterToken] = useState<string | undefined>(
     undefined
   );
