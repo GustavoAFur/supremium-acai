@@ -16,6 +16,8 @@ import OpenCashRegister from "@/app/_components/open-cash-register";
 import { deleteCookie, getCookie } from "cookies-next/client";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
 export interface CashRegister {
   id: string;
@@ -32,6 +34,7 @@ export interface CashRegister {
 
 export default function CashFlow() {
   const [isOpen, setIsOpen] = useState(false);
+  const viewValues = getCookie("viewValues") as string | null;
   const [registerToken, setRegisterToken] = useState<string | undefined>(
     undefined
   );
@@ -79,6 +82,8 @@ export default function CashFlow() {
           // Listener em tempo real
           const unsubscribe = onSnapshot(registerRef, (registerDoc) => {
             if (registerDoc.exists()) {
+              console.log("Documento do caixa:", registerDoc.data());
+
               setCashRegister({
                 id: registerDoc.id,
                 ...registerDoc.data(),
@@ -107,24 +112,20 @@ export default function CashFlow() {
   function calculateTotal() {
     if (cashRegister) {
       const {
+        totalTransshipment = 0,
         totalCash = 0,
         totalCard = 0,
         totalPix = 0,
-        cashFund = 0,
       } = cashRegister;
 
       const total =
-        Number(totalCash) +
+        Number(totalCash - totalTransshipment) +
         Number(totalCard) +
-        Number(totalPix) +
-        Number(cashFund);
+        Number(totalPix);
 
-      return total.toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      });
+      return total;
     }
-    return "R$00,00";
+    return 0;
   }
 
   const handleOpenCloseCashRegister = async () => {
@@ -173,7 +174,11 @@ export default function CashFlow() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-primary">
-                  +{cashRegister?.totalSales}
+                  {cashRegister?.totalSales}
+
+                  <Button variant={"ghost"} className="ml-2">
+                    <Eye />
+                  </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   +100% do mês passado (sem dados para calcular)
@@ -219,7 +224,7 @@ export default function CashFlow() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Cartao</CardTitle>
+                <CardTitle className="text-sm font-medium">Cartão</CardTitle>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -344,8 +349,20 @@ export default function CashFlow() {
               </CardHeader>
               <CardContent>
                 {registerToken ? (
-                  <div className="text-3xl text-[#007C56] font-bold">
-                    {calculateTotal()}
+                  <div className="text-3xl text-[#007C56] font-bold flex flex-row ">
+                    {Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(parseFloat(calculateTotal().toString() ?? "0"))}
+
+                    <p className="text-lg mt-2 ml-2 text-[#396e5f]">
+                      {`(${Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(
+                        parseFloat(cashRegister?.cashFund?.toString() ?? "0")
+                      )} em caixa)`}
+                    </p>
                   </div>
                 ) : (
                   <div className="text-3xl text-[#DF3030] font-bold">
