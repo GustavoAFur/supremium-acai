@@ -28,6 +28,8 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Eye,
+  EyeOff,
   ListFilter,
   ReceiptText,
   Search,
@@ -70,7 +72,7 @@ import {
   startOfWeek,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { getCookie } from "cookies-next/client";
+import { getCookie, setCookie } from "cookies-next/client";
 import {
   Dialog,
   DialogContent,
@@ -140,6 +142,8 @@ const OrdersContent = () => {
   const search = useSearchParams();
   const status = search.get("status");
   const router = useRouter();
+  const viewValues = getCookie("viewValues") as string | null;
+  const [viewValuesState, setViewValuesState] = useState(viewValues);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isFinishing, setIsFinishing] = useState(false);
@@ -426,17 +430,9 @@ const OrdersContent = () => {
   }, [paymentMethodList]);
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-12">
+    <div className="flex-1 space-y-4 p-8 pt-12 justify-between">
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Seus pedidos</h2>
-
-        <div className="flex items-center space-x-2">
-          <CalendarDateRangePicker />
-          <Button>
-            <Search className="size-4" />
-            Buscar
-          </Button>
-        </div>
       </div>
 
       <div
@@ -467,21 +463,47 @@ const OrdersContent = () => {
             <Card x-chunk="dashboard-05-chunk-1">
               <CardHeader className="pb-2">
                 <CardDescription>Essa semana</CardDescription>
-                <CardTitle className="text-4xl">
-                  {currentWeek === 0
-                    ? "R$0,00"
-                    : Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                        maximumFractionDigits: 2,
-                        minimumFractionDigits: 2,
-                      }).format(currentWeek)}
+                <CardTitle className="text-4xl flex items-center">
+                  {viewValuesState === "true"
+                    ? currentWeek === 0
+                      ? "R$0,00"
+                      : Intl.NumberFormat("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2,
+                        }).format(currentWeek)
+                    : "R$ --,--"}
+
+                  <Button
+                    onClick={() => {
+                      if (viewValuesState === "true") {
+                        setCookie("viewValues", "false");
+                        setViewValuesState("false");
+                      } else {
+                        setCookie("viewValues", "true");
+                        setViewValuesState("true");
+                      }
+                    }}
+                    className="gap-1 ml-2"
+                    variant="ghost"
+                    size="sm"
+                  >
+                    {viewValuesState === "true" ? (
+                      <Eye className="size-4" />
+                    ) : (
+                      <EyeOff className="size-4" />
+                    )}
+                  </Button>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">
                   {/* +25% da semana passada */}
-                  Não há dados suficientes para calcular
+                  Valores somados desde{" "}
+                  {startOfWeek(new Date(), {
+                    weekStartsOn: 1,
+                  }).toLocaleDateString()}
                 </div>
               </CardContent>
               <CardFooter>
@@ -498,15 +520,38 @@ const OrdersContent = () => {
             <Card x-chunk="dashboard-05-chunk-2">
               <CardHeader className="pb-2">
                 <CardDescription>Este mês</CardDescription>
-                <CardTitle className="text-4xl">
-                  {currentMonth === 0
-                    ? "R$0,00"
-                    : Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                        maximumFractionDigits: 2,
-                        minimumFractionDigits: 2,
-                      }).format(currentMonth)}
+                <CardTitle className="text-4xl flex items-center">
+                  {viewValuesState === "true"
+                    ? currentMonth === 0
+                      ? "R$0,00"
+                      : Intl.NumberFormat("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2,
+                        }).format(currentMonth)
+                    : "R$ --,--"}
+
+                  <Button
+                    onClick={() => {
+                      if (viewValuesState === "true") {
+                        setCookie("viewValues", "false");
+                        setViewValuesState("false");
+                      } else {
+                        setCookie("viewValues", "true");
+                        setViewValuesState("true");
+                      }
+                    }}
+                    className="gap-1 ml-2"
+                    variant="ghost"
+                    size="sm"
+                  >
+                    {viewValuesState === "true" ? (
+                      <Eye className="size-4" />
+                    ) : (
+                      <EyeOff className="size-4" />
+                    )}
+                  </Button>
                 </CardTitle>
               </CardHeader>
               <CardContent>
