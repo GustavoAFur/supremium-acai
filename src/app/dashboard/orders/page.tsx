@@ -31,6 +31,7 @@ import {
   Eye,
   EyeOff,
   ListFilter,
+  Plus,
   ReceiptText,
   Trash2,
   X,
@@ -278,6 +279,22 @@ const OrdersContent = () => {
     setIdRegister(register as string);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "p") {
+        event.preventDefault(); // Evita atalhos do navegador
+
+        router.push("/dashboard/orders/create");
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const incrementValuesToCashRegister = async () => {
     try {
       const idRegister = getCookie("idCashRegister");
@@ -313,14 +330,11 @@ const OrdersContent = () => {
         const newValueCach = crDoc.data().totalCash + totalCashOrder;
         const newValueCard = crDoc.data().totalCard + totalCardOrder;
         const newValuePix = crDoc.data().totalPix + totalPixOrder;
-        const newValueTransshipment =
-          crDoc.data().totalTransshipment + transshipment;
         const newTotalSales = crDoc.data().totalSales + 1;
         transaction.update(registerRef, {
-          totalCash: newValueCach,
-          totalCard: newValueCard,
-          totalPix: newValuePix,
-          totalTransshipment: newValueTransshipment,
+          totalCash: newValueCach.toFixed(2),
+          totalCard: newValueCard.toFixed(2),
+          totalPix: newValuePix.toFixed(2),
           totalSales: newTotalSales,
         });
       });
@@ -454,6 +468,11 @@ const OrdersContent = () => {
                   onClick={() => router.push("/dashboard/orders/create")}
                 >
                   Criar pedido
+                  <div className="flex items-center bg-[#5B0D6A] pb-[2px] rounded-[4px] shadow-xl">
+                    <div className="flex items-center bg-[#6D0E7E] text-white text-xs rounded-[4px] px-2 py-1 justify-center">
+                      P
+                    </div>
+                  </div>
                 </Button>
               </CardFooter>
             </Card>
